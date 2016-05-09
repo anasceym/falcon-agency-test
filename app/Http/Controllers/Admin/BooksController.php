@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Session;
+use Flash;
 
 class BooksController extends Controller
 {
@@ -61,6 +63,8 @@ class BooksController extends Controller
 		unset($data['released_at']);
 		
 		$book->update($data);
+		
+		Flash::success('Successfully updated information for '. $book->title);
 		
 		return redirect()->route('admin.books.index');
 	}

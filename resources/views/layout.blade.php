@@ -25,6 +25,12 @@
 
 @include('_partials.navbar')
 
+@if (Session::has('flash_notification.message'))
+	<div class="hidden">
+		<input type="hidden" data-plugin="notification" data-type="{{ Session::get('flash_notification.level') }}" value="{{ Session::get('flash_notification.message') }}"/>
+	</div>
+@endif
+
 <div class="container">
 	@yield('content')
 </div>

@@ -67,6 +67,7 @@ gulp.task('css', function() {
                 path.join(config.bowerDir, 'bootstrap', 'less'),
                 path.join(config.bowerDir, 'fontawesome', 'less'),
                 path.join(config.bowerDir, 'owl.carousel', 'dist', 'assets'),
+    			path.join(config.nodeDir, 'sweetalert', 'dist'),
 				path.join('.', 'resources', 'vendor', 'jquery-touchspin'),
 				path.join('.', 'resources', 'vendor', 'jquery-bootstrap-datepicker'),
                 path.join(config.nodeDir, 'sweetalert', 'dist'),

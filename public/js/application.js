@@ -15422,6 +15422,17 @@ window.Application = new Vue({
 
 				$(this).datepicker({});
 			});
+			
+			if($('[data-plugin=notification]').length) {
+				
+				var element = $('[data-plugin=notification]');
+				
+				swal({
+					title: '',
+					text: element.val(),
+					type: element.data('type') 
+				});
+			}
 		}
 	}
 });
