@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Book;
+use App\Http\Requests\BookRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -55,10 +56,9 @@ class BooksController extends Controller
 	 * @param Book $book
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	public function update(Request $request, Book $book) {
+	public function update(BookRequest $request, Book $book) {
 		
-		$data = $request->get('book');
-		
+		$data = $request->all();
 		
 		$releasedAt = Carbon::createFromFormat('m/d/Y',$data['released_at']);
 		
@@ -76,8 +76,31 @@ class BooksController extends Controller
 		return redirect()->route('admin.books.index');
 	}
 	
-	public function handleCreate(Request $request) {
-		dd($request->get('book'));
+	public function handleCreate(BookRequest $request) {
+		
+		$data = $request->all();
+		
+		$releasedAt = Carbon::createFromFormat('m/d/Y',$data['released_at']);
+		
+		if($releasedAt) {
+			
+			$data['released_at'] = $releasedAt;
+		}
+		else {
+			
+			unset($data['released_at']);
+		}
+		
+		if($book = Book::create($data)) {
+			
+			Flash::success('Successfully added book '.$book->title);
+		}
+		else {
+			
+			Flash::error('Failed to create the book. Please try again');
+		}
+		
+		return redirect()->route('admin.books.index');
 	}
 
 	/**
