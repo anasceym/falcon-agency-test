@@ -67,7 +67,9 @@ class BooksController extends Controller
 		
 		$data = $this->handleUploadCover($request, $data);
 		
+		$data['authors'] = isset($data['authors']) ? $data['authors'] : []; 
 		$book->authors()->sync($data['authors']);
+		
 		$book->update($data);
 		
 		Flash::success('Successfully updated information for '. $book->title);
@@ -88,6 +90,8 @@ class BooksController extends Controller
 		$data = $this->handleUploadCover($request, $data);
 
 		if($book = Book::create($data)) {
+			
+			$data['authors'] = isset($data['authors']) ? $data['authors'] : []; 
 			
 			$book->authors()->sync($data['authors']);
 			
