@@ -50,6 +50,6 @@ class Book extends Model
 	 */
 	public function setPriceAttribute($value) {
 		
-		return $value*100;
+		$this->attributes['price'] = $value*100;
 	}
 }
