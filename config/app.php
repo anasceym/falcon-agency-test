@@ -157,7 +157,8 @@ return [
         App\Providers\RouteServiceProvider::class,
 		
 		Laracasts\Flash\FlashServiceProvider::class,
-		Intervention\Image\ImageServiceProvider::class
+		Intervention\Image\ImageServiceProvider::class,
+		DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
 
     ],
 
@@ -206,7 +207,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
 		'Input' => Illuminate\Support\Facades\Input::class,
 		'Flash' => Laracasts\Flash\Flash::class,
-		'Image' => Intervention\Image\Facades\Image::class
+		'Image' => Intervention\Image\Facades\Image::class,
+		'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
 
     ],
 

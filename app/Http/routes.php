@@ -28,9 +28,14 @@ Route::group(['prefix' => 'admin', 'namespace' => 'admin'], function() {
 		'uses' => 'BooksController@create'
 	]);
 	
-	Route::get('books/{book}', [
+	Route::get('books/{book}/edit', [
 		'as' => 'admin.books.edit',
 		'uses' => 'BooksController@edit'
+	]);
+	
+	Route::get('books/{book}', [
+		'as' => 'admin.books.show',
+		'uses' => 'BooksController@show'
 	]);
 	
 	Route::delete('books/{book}', [

@@ -74,7 +74,7 @@ class BooksController extends Controller
 		
 		Flash::success('Successfully updated information for '. $book->title);
 		
-		return redirect()->route('admin.books.index');
+		return redirect()->route('admin.books.show', ['book' => $book]);
 	}
 
 	/**
@@ -125,7 +125,7 @@ class BooksController extends Controller
 			Flash::error('Failed to delete book '.$bookTitle);
 		}
 		
-		return redirect()->back();
+		return redirect()->route('admin.books.index');
 	}
 
 	/**
@@ -155,5 +155,15 @@ class BooksController extends Controller
 			return $data;
 		}
 		return $data;
+	}
+
+	/**
+	 * Show Book page
+	 * 
+	 * @param Book $book
+	 */
+	public function show(Book $book) {
+		
+		return view('admin.books.show', compact('book'));
 	}
 }
