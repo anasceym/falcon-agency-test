@@ -35,6 +35,7 @@ gulp.task('bower', function() {
 var fontPaths = [
     path.join(config.bowerDir, 'fontawesome', 'fonts', '**.*'),
     path.join(config.bowerDir, 'bootstrap', 'fonts', '**.*'),
+	path.join('.', 'resources', 'vendor', 'jquery-dropify', 'fonts', '**.*'),
 ];
 
 gulp.task('icons', function() {
@@ -70,6 +71,7 @@ gulp.task('css', function() {
     			path.join(config.nodeDir, 'sweetalert', 'dist'),
 				path.join('.', 'resources', 'vendor', 'jquery-touchspin'),
 				path.join('.', 'resources', 'vendor', 'jquery-bootstrap-datepicker'),
+				path.join('.', 'resources', 'vendor', 'jquery-dropify', 'css'),
                 path.join(config.nodeDir, 'sweetalert', 'dist'),
             ]
         }))
@@ -92,6 +94,7 @@ gulp.task('build-css', ['bower', 'icons', 'assets', 'css', 'images']);
     path.join(config.nodeDir, 'sweetalert', 'dist', 'sweetalert.min.js'),
     path.join('.', 'resources', 'vendor', 'jquery-touchspin', 'jquery-touchspin.min.js'),
     path.join('.', 'resources', 'vendor', 'jquery-bootstrap-datepicker', 'jquery-bootstrap-datepicker.min.js'),
+    path.join('.', 'resources', 'vendor', 'jquery-dropify', 'js', 'dropify.min.js'),
     path.join('.', 'resources', 'js', 'main.js')
  ];
 

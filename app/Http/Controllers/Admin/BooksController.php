@@ -11,6 +11,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Session;
 use Flash;
+use Image;
 
 class BooksController extends Controller
 {
@@ -59,15 +60,8 @@ class BooksController extends Controller
 	public function update(BookRequest $request, Book $book) {
 		
 		$data = $request->all();
-		
-		$releasedAt = Carbon::createFromFormat('m/d/Y',$data['released_at']);
-		
-		if($releasedAt) {
-			
-			$book->released_at = $releasedAt;
-		}
-		
-		unset($data['released_at']);
+
+		$data = $this->handleUploadCover($request, $data);
 		
 		$book->update($data);
 		
@@ -75,22 +69,19 @@ class BooksController extends Controller
 		
 		return redirect()->route('admin.books.index');
 	}
-	
+
+	/**
+	 * Method to handle the create Book process
+	 * 
+	 * @param BookRequest $request
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function handleCreate(BookRequest $request) {
 		
 		$data = $request->all();
-		
-		$releasedAt = Carbon::createFromFormat('m/d/Y',$data['released_at']);
-		
-		if($releasedAt) {
-			
-			$data['released_at'] = $releasedAt;
-		}
-		else {
-			
-			unset($data['released_at']);
-		}
-		
+
+		$data = $this->handleUploadCover($request, $data);
+
 		if($book = Book::create($data)) {
 			
 			Flash::success('Successfully added book '.$book->title);
@@ -124,5 +115,34 @@ class BooksController extends Controller
 		}
 		
 		return redirect()->back();
+	}
+
+	/**
+	 * @param BookRequest $request
+	 * @param $data
+	 * @return mixed
+	 */
+	private function handleUploadCover(BookRequest $request, $data)
+	{
+		if ($request->hasFile('book_cover')) {
+
+			$file = $request->file('book_cover');
+
+			if (preg_match('/^image\/(png|jpg|jpeg|bmp)/', $file->getClientMimeType())) {
+
+				$fileName = 'book-cover-' . time() . '.' . $file->getClientOriginalExtension();
+
+				$fullPath = 'images/uploaded/' . $fileName;
+
+				$image = Image::make($file);
+				$image->fit(600, 600);
+				$image->save($fullPath);
+
+				$data['cover_path'] = '{app_path}/' . $fullPath;
+				return $data;
+			}
+			return $data;
+		}
+		return $data;
 	}
 }

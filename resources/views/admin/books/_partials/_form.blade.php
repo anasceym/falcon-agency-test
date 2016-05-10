@@ -32,6 +32,12 @@
 	</div>
 </div>
 <div class="form-group row">
+	<div class="col-sm-6">
+		<label class="control-label">Book cover</label>
+		<input type="file" class="dropify" data-default-file="{{$book->cover_path}}" data-plugin="dropify" name="book_cover"/>
+	</div>
+</div>
+<div class="form-group row">
 	<div class="col-sm-12">
 		<label class="control-label">Description</label>
 		<textarea class="form-control" cols="30" rows="10" name="description"><?php echo $book->description ?></textarea>

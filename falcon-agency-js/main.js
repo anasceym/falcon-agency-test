@@ -66,13 +66,15 @@ window.Application = new Vue({
 			
 			$.each($('[data-method=delete]'), function() {
 				
-				var $element = $(this);
+				var $element = $(this); 
 				var classes = $element.attr('class');
 				var link = $element.attr('href');
 				var csrfToken = $element.data('csrfToken'); 
 				
 				$element.wrap('<form style="display: inline-block;" action="'+link+'" method="POST"><input type="hidden" value="DELETE" name="_method"><input type="hidden" name="_token" value="'+csrfToken+'"/><button type="submit" class="'+classes+'"><i class="fa fa-remove"></i></button></form>');
 			});
+			
+			$('[data-plugin=dropify]').dropify();
 		}
 	}
 });

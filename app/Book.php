@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
@@ -19,7 +20,7 @@ class Book extends Model
 	 * 
 	 * @var array
 	 */
-	protected $fillable = ['title','isbn', 'description', 'price', 'released_at'];
+	protected $fillable = ['title','isbn', 'description', 'price', 'released_at', 'cover_path'];
 	
 	/**
 	 * Relation to App\Author
@@ -51,5 +52,21 @@ class Book extends Model
 	public function setPriceAttribute($value) {
 		
 		$this->attributes['price'] = $value*100;
+	}
+	
+	public function setReleasedAtAttribute($value) {
+		
+		$releasedAt = Carbon::createFromFormat('m/d/Y',$value);
+		
+		if($releasedAt) {
+			
+			$this->attributes['released_at'] = $releasedAt;
+		}
+	}
+	
+	public function getCoverPathAttribute($value) {
+		
+		
+		return str_replace('{app_path}',env('APP_URL'),$value);
 	}
 }
