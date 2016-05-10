@@ -11,7 +11,7 @@
 |
 */
 
-Route::group(['prefix' => 'admin', 'namespace' => 'admin'], function() {
+Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'admin'], function() {
 	
 	Route::get('books', [
 		'as' => 'admin.books.index',
@@ -49,6 +49,9 @@ Route::group(['prefix' => 'admin', 'namespace' => 'admin'], function() {
 	]);
 	
 });
+
+
+Route::auth();
 
 Route::get('/', function () {
     return view('welcome');
