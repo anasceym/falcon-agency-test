@@ -10,7 +10,7 @@
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
 
 	<!-- Bootstrap core CSS -->
-	<link href="/css/application.css" rel="stylesheet">
+	<link href="/css/application.css?v=<?php echo time() ?>" rel="stylesheet">
 
 	<style>
 		body {
@@ -26,7 +26,7 @@
 
 @include('_partials.navbar')
 
-<div class="container">
+<div class="container container-1000">
 	@yield('content')
 </div>
 

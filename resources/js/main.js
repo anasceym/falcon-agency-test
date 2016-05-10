@@ -1,4 +1,72 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+module.exports = {
+	template: require('./books_listing.template.html'),
+
+	data: function() {
+		return {
+			viewType: 'grid',
+			
+			books: [
+				{
+					id : 1,
+					title: 'Buku 1',
+					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
+					price: '29.90'
+				},
+				{
+					id : 2,
+					title: 'Buku 2',
+					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
+					price: '29.90'
+				},
+				{
+					id : 3,
+					title: 'Buku 3',
+					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
+					price: '29.90'
+				},
+				{
+					id : 4,
+					title: 'Buku 4',
+					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
+					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
+					price: '29.90'
+				},
+			]
+		}
+	},
+	init: function() {
+
+	},
+	ready: function() {
+
+		
+	},
+
+	props: [
+
+	],
+
+	methods: {
+		
+		switchType: function(type, e) {
+			
+			e.preventDefault();
+			
+			this.viewType = type;
+		}
+	},
+
+	events: {
+		
+	}
+}
+},{"./books_listing.template.html":2}],2:[function(require,module,exports){
+module.exports = '<div class="row">\n	<div class="col-xs-12">\n		<div class="panel panel-default">\n			<div class="panel-heading">\n				<h3 class="panel-title">Search options</h3>\n			</div>\n			<div class="panel-body">\n				<div class="row">\n					<div class="col-xs-12">\n						<div class="row">\n							<div class="col-md-3"><p class="form-control-static">Keywords</p></div>\n							<div class="col-md-9"><input type="text" class="form-control"/></div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" multiple class="form-control">\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" multiple class="form-control">\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">View</p></div>\n							<div class="col-md-9">\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'grid\' }" v-on:click="switchType(\'grid\', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid</button>\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'list\' }" v-on:click="switchType(\'list\', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List</button>\n							</div>\n						</div>\n					</div>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'grid\'">\n	<div class="col-sm-6 col-md-3" v-for="book in books">\n		<div class="widget widget-book-small">\n			<div class="img-container"\n				 style="background-image: url(\'{{book.cover_path}}\');">\n				<span class="price-tag">RM{{book.price}}</span>\n			</div>\n			<h3>{{book.title}}</h3>\n\n			<p>{{book.excerpt}}</p>\n			<a href="#" class="btn btn-primary">Read more</a>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'list\'">\n	<div class="col-xs-12" v-for="book in books">\n		<div class="widget widget-book-list">\n			<div class="row">\n				<div class="col-sm-3">\n					<img src="{{book.cover_path}}" class="img-responsive" alt=""\n						 style="max-height: 160px;"/>\n				</div>\n				<div class="col-sm-6">\n					<h3>{{book.title}}</h3>\n\n					<p>{{book.excerpt}}</p>\n				</div>\n				<div class="col-sm-3">\n					<h4>RM{{book.price}}</h4>\n					<a href="#" class="btn btn-primary">Read more</a>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>';
+},{}],3:[function(require,module,exports){
 var Vue = require('Vue');
 
 window.Application = new Vue({
@@ -6,7 +74,7 @@ window.Application = new Vue({
 	el: '#falcon-agency-test-application',
 
 	init: function () {
-
+		
 	},
 
 	ready: function () {
@@ -15,7 +83,11 @@ window.Application = new Vue({
 
 		console.log('[Application] Ready');
 	},
-
+	
+	components: {
+		booklisting: require('./components/books_listing/books_listing.js'), 
+	},
+	
 	methods: {
 		
 		deleteItem: function(e) {
@@ -83,7 +155,7 @@ window.Application = new Vue({
 		}
 	}
 });
-},{"Vue":2}],2:[function(require,module,exports){
+},{"./components/books_listing/books_listing.js":1,"Vue":4}],4:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.22
@@ -10107,7 +10179,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":3}],3:[function(require,module,exports){
+},{"_process":5}],5:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -10203,4 +10275,4 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[1]);
+},{}]},{},[3]);

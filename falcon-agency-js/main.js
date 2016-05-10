@@ -5,7 +5,7 @@ window.Application = new Vue({
 	el: '#falcon-agency-test-application',
 
 	init: function () {
-
+		
 	},
 
 	ready: function () {
@@ -14,7 +14,11 @@ window.Application = new Vue({
 
 		console.log('[Application] Ready');
 	},
-
+	
+	components: {
+		booklisting: require('./components/books_listing/books_listing.js'), 
+	},
+	
 	methods: {
 		
 		deleteItem: function(e) {

@@ -50,9 +50,15 @@ Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'admin
 	
 });
 
+Route::get('books', [
+	'as' => 'books.index',
+	'uses' => 'BooksController@index'
+]);
+
 
 Route::auth();
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [
+	'as' => 'index',
+	'uses' => 'HomeController@index'
+]);
