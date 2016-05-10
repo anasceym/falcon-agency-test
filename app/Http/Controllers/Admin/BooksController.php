@@ -20,7 +20,7 @@ class BooksController extends Controller
 	 */
 	public function index() {
 		
-		$books = Book::paginate(10);
+		$books = Book::latest()->paginate(10);
 		
 		return view('admin.books.index', compact('books'));
 	}
@@ -47,7 +47,14 @@ class BooksController extends Controller
 		
 		return view('admin.books.edit', compact('book'));
 	}
-	
+
+	/**
+	 * Method to handle update book
+	 * 
+	 * @param Request $request
+	 * @param Book $book
+	 * @return \Illuminate\Http\RedirectResponse
+	 */
 	public function update(Request $request, Book $book) {
 		
 		$data = $request->get('book');
@@ -67,5 +74,32 @@ class BooksController extends Controller
 		Flash::success('Successfully updated information for '. $book->title);
 		
 		return redirect()->route('admin.books.index');
+	}
+	
+	public function handleCreate(Request $request) {
+		dd($request->get('book'));
+	}
+
+	/**
+	 * Method to handle delete the Book
+	 * 
+	 * @param Book $book
+	 * @return \Illuminate\Http\RedirectResponse
+	 * @throws \Exception
+	 */
+	public function destroy(Book $book) {
+		
+		$bookTitle = $book->title;
+		
+		if($book->delete()) {
+			
+			Flash::success('Successfully deleted book '.$bookTitle);
+		}
+		else {
+			
+			Flash::error('Failed to delete book '.$bookTitle);
+		}
+		
+		return redirect()->back();
 	}
 }

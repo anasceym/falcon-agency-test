@@ -18,14 +18,24 @@ Route::group(['prefix' => 'admin', 'namespace' => 'admin'], function() {
 		'uses' => 'BooksController@index'
 	]);
 	
-	Route::get('books/new', [
+	Route::post('books', [
 		'as' => 'admin.books.create',
+		'uses' => 'BooksController@handleCreate'
+	]);
+	
+	Route::get('books/new', [
+		'as' => 'admin.books.new',
 		'uses' => 'BooksController@create'
 	]);
 	
 	Route::get('books/{book}', [
 		'as' => 'admin.books.edit',
 		'uses' => 'BooksController@edit'
+	]);
+	
+	Route::delete('books/{book}', [
+		'as' => 'admin.books.delete',
+		'uses' => 'BooksController@destroy'
 	]);
 	
 	Route::patch('books/{book}', [

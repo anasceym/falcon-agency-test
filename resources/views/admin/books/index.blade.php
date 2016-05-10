@@ -6,7 +6,7 @@
 	
 	<div class="row">
 		<div class="col-xs-12 text-right">
-			<a href="{{route('admin.books.create')}}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> &nbsp;Create a new book</a>
+			<a href="{{route('admin.books.new')}}" class="btn btn-primary btn-lg"><i class="fa fa-plus"></i> &nbsp;Create a new book</a>
 		</div>
 	</div>
 	<div class="row">
@@ -31,7 +31,7 @@
 							<td>{{$book->released_at->format('d F Y')}}</td>
 							<td>
 								<a href="{{route('admin.books.edit', ['book' => $book->id])}}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i></a>
-								<a href="#" class="btn btn-danger btn-xs"><i class="fa fa-remove"></i></a>
+								<a href="{{ route('admin.books.delete', ['book' => $book->id]) }}" class="btn btn-danger btn-xs" data-csrf-token="{{ csrf_token()  }}" data-confirmation="true" data-method="delete"><i class="fa fa-remove"></i></a>
 							</td>
 						</tr>
 					@endforeach

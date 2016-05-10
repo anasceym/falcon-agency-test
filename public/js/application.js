@@ -15392,6 +15392,12 @@ window.Application = new Vue({
 	},
 
 	methods: {
+		
+		deleteItem: function(e) {
+			
+			var $elem = $(e.target);
+			
+		},
 
 		initPlugins: function () {
 
@@ -15433,6 +15439,16 @@ window.Application = new Vue({
 					type: element.data('type') 
 				});
 			}
+			
+			$.each($('[data-method=delete]'), function() {
+				
+				var $element = $(this);
+				var classes = $element.attr('class');
+				var link = $element.attr('href');
+				var csrfToken = $element.data('csrfToken'); 
+				
+				$element.wrap('<form style="display: inline-block;" action="'+link+'" method="POST"><input type="hidden" value="DELETE" name="_method"><input type="hidden" name="_token" value="'+csrfToken+'"/><button type="submit" class="'+classes+'"><i class="fa fa-remove"></i></button></form>');
+			});
 		}
 	}
 });

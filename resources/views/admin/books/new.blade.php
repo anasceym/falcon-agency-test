@@ -6,7 +6,7 @@
 	
 	<div class="row">
 		<div class="col-xs-12">
-			<form action="">
+			<form action="{{ route('admin.books.create') }}" method="POST">
 				@include('admin.books._partials._form', ['buttonText' => 'Create'])
 			</form>
 		</div>

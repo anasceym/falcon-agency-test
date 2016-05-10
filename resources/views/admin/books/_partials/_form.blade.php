@@ -25,7 +25,6 @@
 	<div class="col-sm-12">
 		<label class="control-label">Description</label>
 		<textarea class="form-control" cols="30" rows="10" name="book[description]">
-			{{$book->description}}
 		</textarea>
 	</div>
 </div>
