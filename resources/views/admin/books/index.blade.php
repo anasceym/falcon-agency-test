@@ -30,6 +30,7 @@
 							<td>{{$book->title}}</td>
 							<td>{{$book->released_at->format('d F Y')}}</td>
 							<td>
+								<a href="{{route('admin.books.show', ['book' => $book->id])}}" class="btn btn-primary btn-xs"><i class="fa fa-search"></i></a>
 								<a href="{{route('admin.books.edit', ['book' => $book->id])}}" class="btn btn-info btn-xs"><i class="fa fa-pencil"></i></a>
 								<a href="{{ route('admin.books.delete', ['book' => $book->id]) }}" class="btn btn-danger btn-xs" data-csrf-token="{{ csrf_token()  }}" data-confirmation="true" data-method="delete"><i class="fa fa-remove"></i></a>
 							</td>
