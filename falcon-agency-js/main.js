@@ -75,6 +75,10 @@ window.Application = new Vue({
 			});
 			
 			$('[data-plugin=dropify]').dropify();
+			
+			$('[data-plugin=multiselect]').selectpicker({
+				style: 'btn-default btn-block'
+			});
 		}
 	}
 });

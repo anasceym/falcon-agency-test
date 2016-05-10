@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Author;
 use App\Book;
 use App\Http\Requests\BookRequest;
 use Carbon\Carbon;
@@ -35,8 +36,9 @@ class BooksController extends Controller
 	public function create() {
 		
 		$book = new Book();
+		$authors = Author::all();
 		
-		return view('admin.books.new', compact('book'));
+		return view('admin.books.new', compact('book', 'authors'));
 	}
 
 	/**
@@ -47,7 +49,9 @@ class BooksController extends Controller
 	 */
 	public function edit(Book $book) {
 		
-		return view('admin.books.edit', compact('book'));
+		$authors = Author::all();
+		
+		return view('admin.books.edit', compact('book', 'authors'));
 	}
 
 	/**
@@ -60,9 +64,10 @@ class BooksController extends Controller
 	public function update(BookRequest $request, Book $book) {
 		
 		$data = $request->all();
-
+		
 		$data = $this->handleUploadCover($request, $data);
 		
+		$book->authors()->sync($data['authors']);
 		$book->update($data);
 		
 		Flash::success('Successfully updated information for '. $book->title);
@@ -83,6 +88,8 @@ class BooksController extends Controller
 		$data = $this->handleUploadCover($request, $data);
 
 		if($book = Book::create($data)) {
+			
+			$book->authors()->sync($data['authors']);
 			
 			Flash::success('Successfully added book '.$book->title);
 		}

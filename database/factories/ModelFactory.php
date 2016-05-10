@@ -29,3 +29,13 @@ $factory->define(App\Book::class, function (Faker\Generator $faker) {
 		'released_at' => $faker->date()
     ];
 });
+
+$factory->define(App\Author::class, function (Faker\Generator $faker) {
+    return [
+        'first_name' => $faker->firstName,
+		'middle_name' => $faker->name,
+		'last_name' => $faker->lastName,
+		'email' => $faker->email,
+		'identity_number' => $faker->uuid
+    ];
+});

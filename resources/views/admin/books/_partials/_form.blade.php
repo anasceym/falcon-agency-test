@@ -36,6 +36,14 @@
 		<label class="control-label">Book cover</label>
 		<input type="file" class="dropify" data-default-file="{{$book->cover_path}}" data-plugin="dropify" name="book_cover"/>
 	</div>
+	<div class="col-sm-6">
+		<label class="control-label">Author(s)</label>
+		<select class="selectpicker form-control" data-plugin="multiselect" data-live-search="true" multiple title="Choose author of the following..." name="authors[]">
+			  @foreach($authors as $author)
+				<option value="{{$author->id}}" {{ in_array($author->id, $book->authors()->get()->lists('id')->toArray() ) ? 'selected' : '' }}>{{$author->first_name}} {{$author->last_name}}</option>
+			  @endforeach
+		</select>
+	</div>
 </div>
 <div class="form-group row">
 	<div class="col-sm-12">

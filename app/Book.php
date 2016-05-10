@@ -4,6 +4,7 @@ namespace App;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use \Exception;
 
 class Book extends Model
 {
@@ -56,12 +57,17 @@ class Book extends Model
 	
 	public function setReleasedAtAttribute($value) {
 		
-		$releasedAt = Carbon::createFromFormat('m/d/Y',$value);
-		
-		if($releasedAt) {
+		try {
+			
+			$releasedAt = Carbon::createFromFormat('m/d/Y',$value);
 			
 			$this->attributes['released_at'] = $releasedAt;
+			
+		} catch(Exception $exp) {
+			
+			$this->attributes['released_at'] = $value;
 		}
+		
 	}
 	
 	public function getCoverPathAttribute($value) {
