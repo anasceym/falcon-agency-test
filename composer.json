@@ -9,7 +9,9 @@
         "laravel/framework": "5.2.*",
         "davejamesmiller/laravel-breadcrumbs": "^3.0",
         "laracasts/flash": "^2.0",
-        "intervention/image": "^2.3"
+        "intervention/image": "^2.3",
+	  	"dingo/api": "1.0.*@dev",
+	  "sofa/eloquence": "~5.2@dev"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

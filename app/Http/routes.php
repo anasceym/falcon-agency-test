@@ -10,6 +10,11 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+$api = app('Dingo\Api\Routing\Router');
+
+$api->version('v1', function ($api) {
+	$api->get('books', 'App\Api\Controllers\BooksController@index');
+});
 
 Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'admin'], function() {
 	

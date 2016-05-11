@@ -5,10 +5,20 @@ namespace App;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use \Exception;
+use Illuminate\Support\Str;
+use Sofa\Eloquence\Eloquence;
 
 class Book extends Model
 {
-
+	use Eloquence;
+	
+	/**
+     * Searchable rules.
+     *
+     * @var array
+     */
+     protected $searchableColumns = ['title', 'description'];
+	
 	/**
 	 * Column with date
 	 * 
@@ -72,7 +82,26 @@ class Book extends Model
 	
 	public function getCoverPathAttribute($value) {
 		
-		
 		return str_replace('{app_path}',env('APP_URL'),$value);
+	}
+	
+	public static function searchAndFilter($request) {
+		
+		$books = self::with(['authors']);
+		
+		if(isset($request['keyword']) && $request['keyword'] !== '') {
+			$books = $books->search($request['keyword']);
+		}
+		
+		if(isset($request['filter']['author'])) {
+			
+		}
+		
+		return $books;
+	}
+	
+	public function getExcerptAttribute($value) {
+		
+		return Str::words($this->attributes['description'], 20);
 	}
 }

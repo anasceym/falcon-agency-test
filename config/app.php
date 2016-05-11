@@ -159,6 +159,8 @@ return [
 		Laracasts\Flash\FlashServiceProvider::class,
 		Intervention\Image\ImageServiceProvider::class,
 		DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+		Dingo\Api\Provider\LaravelServiceProvider::class,
+		Sofa\Eloquence\ServiceProvider::class
 
     ],
 
