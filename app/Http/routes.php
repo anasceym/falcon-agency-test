@@ -13,7 +13,16 @@
 $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
-	$api->get('books', 'App\Api\Controllers\BooksController@index');
+	
+	$api->get('authors', [
+		'as' => 'api.authors.index',
+		'uses' => 'App\Api\Controllers\AuthorsController@index'
+	]);
+	
+	$api->get('books', [
+		'as' => 'api.books.index',
+		'uses' => 'App\Api\Controllers\BooksController@index'
+	]);
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'admin'], function() {

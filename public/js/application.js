@@ -15395,70 +15395,175 @@ c.toDisplay)return c.toDisplay(b,c,d);var e={d:b.getUTCDate(),D:q[d].daysShort[b
 module.exports = {
 	template: require('./books_listing.template.html'),
 
-	data: function() {
+	data: function () {
 		return {
 			viewType: 'grid',
 			
-			books: [
-				{
-					id : 1,
-					title: 'Buku 1',
-					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
-					price: '29.90'
-				},
-				{
-					id : 2,
-					title: 'Buku 2',
-					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
-					price: '29.90'
-				},
-				{
-					id : 3,
-					title: 'Buku 3',
-					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
-					price: '29.90'
-				},
-				{
-					id : 4,
-					title: 'Buku 4',
-					excerpt: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit.',
-					cover_path: '/images/uploaded/296dc6471c37d76f54fa2c607fe67dee.jpg',
-					price: '29.90'
-				},
-			]
+			keyword: '',
+			filter: {
+				authors: []
+			},
+
+			books: [],
+
+			authors: []
 		}
 	},
-	init: function() {
+	init: function () {
 
 	},
-	ready: function() {
-
+	ready: function () {
 		
+		this.initializedQueryStringData();
+
+		this.fetchAuthors();
+		this.fetchBooks();
+		
+		this.$watch('keyword', function() {
+			
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		this.$watch('filter.authors', function() {
+			
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
 	},
 
 	props: [
-
+		'data-api-authors-url',
+		'data-api-books-url'
 	],
 
 	methods: {
+		initializedQueryStringData: function() {
+			var queryString = this.getQueryString();
+			
+			if(queryString.hasOwnProperty('keyword')) {
+				
+				this.keyword = queryString['keyword'];
+			}
+			
+			if(queryString.hasOwnProperty('authors[]')) {
+				
+				this.filter.authors =  queryString['authors[]']
+			}
+		},
+		/**
+		 * Updated by anasceym
+		 * 
+		 * @source http://stackoverflow.com/questions/4656843/jquery-get-querystring-from-url
+		 * @returns {Array}
+		 */
+		getQueryString: function ()
+		{
+			var vars = [], hash;
+			var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+			for(var i = 0; i < hashes.length; i++)
+			{
+				hash = hashes[i].split('=');
+				
+				var key = decodeURIComponent(hash[0]);
+				var value = decodeURI(hash[1]);
+				if(!vars.hasOwnProperty(key)) {
+					
+					if(key.substr(key.length - 2) === '[]') {
+						// Means it is an array
+						vars[key] = [value];
+					}
+					else {
+
+						vars[key] = value;
+					}
+				}
+				else {
+					if(typeof vars[key] == 'object') {
+
+						vars[key].push(value);
+					}
+				}
+			}
+			
+			return vars;
+		},
+		changeHistory: function() {
+			
+			var prepareQueryString = {
+				keyword : this.keyword,
+			}; 
+			
+			prepareQueryString = $.extend(prepareQueryString, { 
+				authors: this.filter.authors
+			});
+			
+			var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname +'?'+ $.param(prepareQueryString).replace(/\+/g, "%20");
+			window.history.pushState({path:newurl},'',newurl); 	
+		},
 		
-		switchType: function(type, e) {
-			
+		switchType: function (type, e) {
+
 			e.preventDefault();
-			
+
 			this.viewType = type;
+		},
+
+		fetchAuthors: function () {
+
+			$.ajax({
+				url: this.dataApiAuthorsUrl,
+				method: 'get',
+				dataType: 'json',
+				data: {},
+				success: function (response) {
+					
+					if(response.hasOwnProperty('data')) {
+
+						this.authors = response.data;
+						
+						setTimeout(function() {
+							$(this.$els.filterauthorel).selectpicker('refresh');
+						}.bind(this),500)
+					}
+				}.bind(this),
+				error: function (response) {
+
+				}.bind(this),
+				complete: function () {
+				}.bind(this) 
+			});
+		},
+		
+		fetchBooks: function() {
+			
+			$.ajax({
+				url: this.dataApiBooksUrl,
+				method: 'get',
+				dataType: 'json',
+				data: {
+					'keyword' : this.keyword,
+					'authors[]' : this.filter.authors
+				},
+				success: function (response) {
+					
+					if(response.hasOwnProperty('data')) {
+						
+						this.books = response.data;
+					}
+				}.bind(this),
+				error: function (response) {
+
+				}.bind(this),
+				complete: function () {
+				}.bind(this)
+			});
 		}
 	},
 
-	events: {
-		
-	}
+	events: {}
 }
 },{"./books_listing.template.html":2}],2:[function(require,module,exports){
-module.exports = '<div class="row">\n	<div class="col-xs-12">\n		<div class="panel panel-default">\n			<div class="panel-heading">\n				<h3 class="panel-title">Search options</h3>\n			</div>\n			<div class="panel-body">\n				<div class="row">\n					<div class="col-xs-12">\n						<div class="row">\n							<div class="col-md-3"><p class="form-control-static">Keywords</p></div>\n							<div class="col-md-9"><input type="text" class="form-control"/></div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" multiple class="form-control">\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" multiple class="form-control">\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">View</p></div>\n							<div class="col-md-9">\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'grid\' }" v-on:click="switchType(\'grid\', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid</button>\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'list\' }" v-on:click="switchType(\'list\', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List</button>\n							</div>\n						</div>\n					</div>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'grid\'">\n	<div class="col-sm-6 col-md-3" v-for="book in books">\n		<div class="widget widget-book-small">\n			<div class="img-container"\n				 style="background-image: url(\'{{book.cover_path}}\');">\n				<span class="price-tag">RM{{book.price}}</span>\n			</div>\n			<h3>{{book.title}}</h3>\n\n			<p>{{book.excerpt}}</p>\n			<a href="#" class="btn btn-primary">Read more</a>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'list\'">\n	<div class="col-xs-12" v-for="book in books">\n		<div class="widget widget-book-list">\n			<div class="row">\n				<div class="col-sm-3">\n					<img src="{{book.cover_path}}" class="img-responsive" alt=""\n						 style="max-height: 160px;"/>\n				</div>\n				<div class="col-sm-6">\n					<h3>{{book.title}}</h3>\n\n					<p>{{book.excerpt}}</p>\n				</div>\n				<div class="col-sm-3">\n					<h4>RM{{book.price}}</h4>\n					<a href="#" class="btn btn-primary">Read more</a>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>';
+module.exports = '<div class="row">\n	<div class="col-xs-12">\n		<div class="panel panel-default">\n			<div class="panel-heading">\n				<h3 class="panel-title">Search options</h3>\n			</div>\n			<div class="panel-body">\n				<div class="row">\n					<div class="col-xs-12">\n						<div class="row">\n							<div class="col-md-3"><p class="form-control-static">Keywords</p></div>\n							<div class="col-md-9"><input type="text" class="form-control" v-model="keyword"/></div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" multiple class="form-control">\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" v-el:filterAuthorEl multiple class="form-control" v-model="filter.authors">\n									<option value="{{author.id}}" v-for="author in authors">{{author.fullname}}</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">View</p></div>\n							<div class="col-md-9">\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'grid\' }" v-on:click="switchType(\'grid\', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid</button>\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'list\' }" v-on:click="switchType(\'list\', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List</button>\n							</div>\n						</div>\n					</div>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'grid\'">\n	<div class="col-sm-6 col-md-3" v-for="book in books">\n		<div class="widget widget-book-small">\n			<div class="img-container"\n				 v-bind:style="{ backgroundImage: \'url(\'+book.cover_path+\')\'}">\n				<span class="price-tag">RM{{book.price}}</span>\n			</div>\n			<h3>{{book.title}}</h3>\n\n			<p>{{book.excerpt}}</p>\n			<a href="#" class="btn btn-primary">Read more</a>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'list\'">\n	<div class="col-xs-12" v-for="book in books">\n		<div class="widget widget-book-list">\n			<div class="row">\n				<div class="col-sm-3">\n					<img v-bind:src="book.cover_path" class="img-responsive" alt=""\n						 style="max-height: 160px;"/>\n				</div>\n				<div class="col-sm-6">\n					<h3>{{book.title}}</h3>\n\n					<p>{{book.excerpt}}</p>\n				</div>\n				<div class="col-sm-3">\n					<h4>RM{{book.price}}</h4>\n					<a href="#" class="btn btn-primary">Read more</a>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>';
 },{}],3:[function(require,module,exports){
 var Vue = require('Vue');
 
@@ -15488,7 +15593,7 @@ window.Application = new Vue({
 			var $elem = $(e.target);
 			
 		},
-
+		
 		initPlugins: function () {
 
 			$.each($('[data-plugin=touchspin]'), function () {

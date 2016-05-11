@@ -93,6 +93,14 @@ class Book extends Model
 			$books = $books->search($request['keyword']);
 		}
 		
+		if(isset($request['authors']) && is_array($request['authors'])) {
+			
+			$books = $books->whereHas('authors', function($query) use ($request) {
+				
+				return $query->whereIn('id', $request['authors']);
+			});
+		}
+		
 		if(isset($request['filter']['author'])) {
 			
 		}

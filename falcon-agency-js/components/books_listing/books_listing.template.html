@@ -9,7 +9,7 @@
 					<div class="col-xs-12">
 						<div class="row">
 							<div class="col-md-3"><p class="form-control-static">Keywords</p></div>
-							<div class="col-md-9"><input type="text" class="form-control"/></div>
+							<div class="col-md-9"><input type="text" class="form-control" v-model="keyword"/></div>
 						</div>
 						<div class="row" style="margin-top:10px;">
 							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>
@@ -27,13 +27,8 @@
 						<div class="row" style="margin-top:10px;">
 							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>
 							<div class="col-md-9">
-								<select data-plugin="multiselect" multiple class="form-control">
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
+								<select data-plugin="multiselect" v-el:filterAuthorEl multiple class="form-control" v-model="filter.authors">
+									<option value="{{author.id}}" v-for="author in authors">{{author.fullname}}</option>
 								</select>
 							</div>
 						</div>
@@ -54,7 +49,7 @@
 	<div class="col-sm-6 col-md-3" v-for="book in books">
 		<div class="widget widget-book-small">
 			<div class="img-container"
-				 style="background-image: url('{{book.cover_path}}');">
+				 v-bind:style="{ backgroundImage: 'url('+book.cover_path+')'}">
 				<span class="price-tag">RM{{book.price}}</span>
 			</div>
 			<h3>{{book.title}}</h3>
@@ -69,7 +64,7 @@
 		<div class="widget widget-book-list">
 			<div class="row">
 				<div class="col-sm-3">
-					<img src="{{book.cover_path}}" class="img-responsive" alt=""
+					<img v-bind:src="book.cover_path" class="img-responsive" alt=""
 						 style="max-height: 160px;"/>
 				</div>
 				<div class="col-sm-6">

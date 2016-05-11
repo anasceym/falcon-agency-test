@@ -25,7 +25,8 @@ class BooksTransformer extends TransformerAbstract {
 		return [
 			'id' => $book->id,
 			'title' => $book->title,
-			'excerpt' => $book->excerpt
+			'excerpt' => $book->excerpt,
+			'price' => $book->price,
 		];
     }
 	

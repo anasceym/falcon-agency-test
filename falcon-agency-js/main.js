@@ -26,7 +26,7 @@ window.Application = new Vue({
 			var $elem = $(e.target);
 			
 		},
-
+		
 		initPlugins: function () {
 
 			$.each($('[data-plugin=touchspin]'), function () {
