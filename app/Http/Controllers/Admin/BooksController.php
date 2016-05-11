@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Author;
 use App\Book;
+use App\Genre;
 use App\Http\Requests\BookRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -37,8 +38,9 @@ class BooksController extends Controller
 		
 		$book = new Book();
 		$authors = Author::all();
+		$genres = Genre::all();
 		
-		return view('admin.books.new', compact('book', 'authors'));
+		return view('admin.books.new', compact('book', 'authors', 'genres'));
 	}
 
 	/**
@@ -50,8 +52,9 @@ class BooksController extends Controller
 	public function edit(Book $book) {
 		
 		$authors = Author::all();
+		$genres = Genre::all();
 		
-		return view('admin.books.edit', compact('book', 'authors'));
+		return view('admin.books.edit', compact('book', 'authors', 'genres'));
 	}
 
 	/**

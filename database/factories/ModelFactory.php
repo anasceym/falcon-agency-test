@@ -25,7 +25,7 @@ $factory->define(App\Book::class, function (Faker\Generator $faker) {
         'title' => $faker->sentence,
         'isbn' => $faker->isbn10,
 		'description' => $faker->paragraph(),
-        'price' => rand(1000,9999999),
+        'price' => rand(10,150), 
 		'released_at' => $faker->date()
     ];
 });

@@ -27,7 +27,8 @@ class BooksTransformer extends TransformerAbstract {
 			'title' => $book->title,
 			'excerpt' => $book->excerpt,
 			'price' => $book->price,
-			'cover_path' => $book->cover_path
+			'cover_path' => $book->cover_path,
+			'released_at' => $book->released_at->format('d F Y')
 		];
     }
 	

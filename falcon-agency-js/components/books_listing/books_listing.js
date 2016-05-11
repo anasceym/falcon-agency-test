@@ -7,12 +7,23 @@ module.exports = {
 			
 			keyword: '',
 			filter: {
-				authors: []
+				authors: [],
+				genre: 'all'
+			},
+			sort: {
+				type: 'title',
+				direction: 'DESC'
 			},
 
 			books: [],
 
-			authors: []
+			authors: [],
+			
+			genres: [],
+			
+			pagination: {
+				current_page: 1
+			}
 		}
 	},
 	init: function () {
@@ -24,13 +35,44 @@ module.exports = {
 
 		this.fetchAuthors();
 		this.fetchBooks();
+		this.fetchGenres();
 		
 		this.$watch('keyword', function() {
 			
+			this.pagination.current_page = 1;
 			this.fetchBooks();
 			this.changeHistory();
 		}.bind(this));
+		
 		this.$watch('filter.authors', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('filter.genre', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('sort.type', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('sort.direction', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('pagination.current_page', function() {
 			
 			this.fetchBooks();
 			this.changeHistory();
@@ -39,10 +81,24 @@ module.exports = {
 
 	props: [
 		'data-api-authors-url',
-		'data-api-books-url'
+		'data-api-books-url',
+		'data-api-genres-url'
 	],
 
 	methods: {
+		toggleSortDirection: function(e) {
+
+			e.preventDefault();
+			
+			if(this.sort.direction == 'ASC') {
+				
+				this.sort.direction = 'DESC';
+			}
+			else {
+
+				this.sort.direction = 'ASC';
+			}
+		},
 		initializedQueryStringData: function() {
 			var queryString = this.getQueryString();
 			
@@ -54,6 +110,37 @@ module.exports = {
 			if(queryString.hasOwnProperty('authors[]')) {
 				
 				this.filter.authors =  queryString['authors[]']
+			}
+			
+			if(queryString.hasOwnProperty('genre')) {
+				
+				this.filter.genre =  queryString['genre']
+			}
+			
+			if(queryString.hasOwnProperty('page')) {
+				
+				this.pagination.current_page =  queryString['page']
+			}
+			
+			if(queryString.hasOwnProperty('sort[type]')) {
+				
+				this.sort.type =  queryString['sort[type]'];
+				
+				setTimeout(function() {
+					$(this.$els.sortel).selectpicker('refresh');
+				}.bind(this),500)
+			}
+			
+			if(queryString.hasOwnProperty('sort[direction]')) {
+				
+				var sortDirection = queryString['sort[direction]'];
+				
+				if(sortDirection != 'ASC' && sortDirection != 'DESC') {
+					
+					sortDirection = 'DESC'; 
+				}
+				
+				this.sort.direction = sortDirection; 
 			}
 		},
 		/**
@@ -100,7 +187,10 @@ module.exports = {
 			}; 
 			
 			prepareQueryString = $.extend(prepareQueryString, { 
-				authors: this.filter.authors
+				authors: this.filter.authors,
+				genre: this.filter.genre,
+				sort: this.sort,
+				page: this.pagination.current_page
 			});
 			
 			var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname +'?'+ $.param(prepareQueryString).replace(/\+/g, "%20");
@@ -140,6 +230,32 @@ module.exports = {
 			});
 		},
 		
+		fetchGenres: function () {
+
+			$.ajax({
+				url: this.dataApiGenresUrl,
+				method: 'get',
+				dataType: 'json',
+				data: {},
+				success: function (response) {
+					
+					if(response.hasOwnProperty('data')) {
+
+						this.genres = response.data;
+						
+						setTimeout(function() {
+							$(this.$els.filtergenreel).selectpicker('refresh');
+						}.bind(this),500)
+					}
+				}.bind(this),
+				error: function (response) {
+
+				}.bind(this),
+				complete: function () {
+				}.bind(this) 
+			});
+		},
+		
 		fetchBooks: function() {
 			
 			$.ajax({
@@ -148,13 +264,21 @@ module.exports = {
 				dataType: 'json',
 				data: {
 					'keyword' : this.keyword,
-					'authors[]' : this.filter.authors
+					'authors[]' : this.filter.authors,
+					'sort[type]' : this.sort.type,
+					'sort[direction]' : this.sort.direction,
+					'page': this.pagination.current_page,
+					'genre' : this.filter.genre
 				},
 				success: function (response) {
 					
 					if(response.hasOwnProperty('data')) {
 						
 						this.books = response.data;
+					}
+					if(response.hasOwnProperty('meta')) {
+						
+						this.pagination = response.meta.pagination;
 					}
 				}.bind(this),
 				error: function (response) {
@@ -163,6 +287,22 @@ module.exports = {
 				complete: function () {
 				}.bind(this)
 			});
+		},
+		
+		changePage: function(e, page) {
+			
+			e.preventDefault();
+			
+			if(page <= 0) {
+				return;
+			}
+			
+			if(page > this.pagination.total_pages) {
+				
+				return;
+			}
+			
+			this.pagination.current_page = page;
 		}
 	},
 

@@ -8,12 +8,23 @@ module.exports = {
 			
 			keyword: '',
 			filter: {
-				authors: []
+				authors: [],
+				genre: 'all'
+			},
+			sort: {
+				type: 'title',
+				direction: 'DESC'
 			},
 
 			books: [],
 
-			authors: []
+			authors: [],
+			
+			genres: [],
+			
+			pagination: {
+				current_page: 1
+			}
 		}
 	},
 	init: function () {
@@ -25,13 +36,44 @@ module.exports = {
 
 		this.fetchAuthors();
 		this.fetchBooks();
+		this.fetchGenres();
 		
 		this.$watch('keyword', function() {
 			
+			this.pagination.current_page = 1;
 			this.fetchBooks();
 			this.changeHistory();
 		}.bind(this));
+		
 		this.$watch('filter.authors', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('filter.genre', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('sort.type', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('sort.direction', function() {
+			
+			this.pagination.current_page = 1;
+			this.fetchBooks();
+			this.changeHistory();
+		}.bind(this));
+		
+		this.$watch('pagination.current_page', function() {
 			
 			this.fetchBooks();
 			this.changeHistory();
@@ -40,10 +82,24 @@ module.exports = {
 
 	props: [
 		'data-api-authors-url',
-		'data-api-books-url'
+		'data-api-books-url',
+		'data-api-genres-url'
 	],
 
 	methods: {
+		toggleSortDirection: function(e) {
+
+			e.preventDefault();
+			
+			if(this.sort.direction == 'ASC') {
+				
+				this.sort.direction = 'DESC';
+			}
+			else {
+
+				this.sort.direction = 'ASC';
+			}
+		},
 		initializedQueryStringData: function() {
 			var queryString = this.getQueryString();
 			
@@ -55,6 +111,37 @@ module.exports = {
 			if(queryString.hasOwnProperty('authors[]')) {
 				
 				this.filter.authors =  queryString['authors[]']
+			}
+			
+			if(queryString.hasOwnProperty('genre')) {
+				
+				this.filter.genre =  queryString['genre']
+			}
+			
+			if(queryString.hasOwnProperty('page')) {
+				
+				this.pagination.current_page =  queryString['page']
+			}
+			
+			if(queryString.hasOwnProperty('sort[type]')) {
+				
+				this.sort.type =  queryString['sort[type]'];
+				
+				setTimeout(function() {
+					$(this.$els.sortel).selectpicker('refresh');
+				}.bind(this),500)
+			}
+			
+			if(queryString.hasOwnProperty('sort[direction]')) {
+				
+				var sortDirection = queryString['sort[direction]'];
+				
+				if(sortDirection != 'ASC' && sortDirection != 'DESC') {
+					
+					sortDirection = 'DESC'; 
+				}
+				
+				this.sort.direction = sortDirection; 
 			}
 		},
 		/**
@@ -101,7 +188,10 @@ module.exports = {
 			}; 
 			
 			prepareQueryString = $.extend(prepareQueryString, { 
-				authors: this.filter.authors
+				authors: this.filter.authors,
+				genre: this.filter.genre,
+				sort: this.sort,
+				page: this.pagination.current_page
 			});
 			
 			var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname +'?'+ $.param(prepareQueryString).replace(/\+/g, "%20");
@@ -141,6 +231,32 @@ module.exports = {
 			});
 		},
 		
+		fetchGenres: function () {
+
+			$.ajax({
+				url: this.dataApiGenresUrl,
+				method: 'get',
+				dataType: 'json',
+				data: {},
+				success: function (response) {
+					
+					if(response.hasOwnProperty('data')) {
+
+						this.genres = response.data;
+						
+						setTimeout(function() {
+							$(this.$els.filtergenreel).selectpicker('refresh');
+						}.bind(this),500)
+					}
+				}.bind(this),
+				error: function (response) {
+
+				}.bind(this),
+				complete: function () {
+				}.bind(this) 
+			});
+		},
+		
 		fetchBooks: function() {
 			
 			$.ajax({
@@ -149,13 +265,21 @@ module.exports = {
 				dataType: 'json',
 				data: {
 					'keyword' : this.keyword,
-					'authors[]' : this.filter.authors
+					'authors[]' : this.filter.authors,
+					'sort[type]' : this.sort.type,
+					'sort[direction]' : this.sort.direction,
+					'page': this.pagination.current_page,
+					'genre' : this.filter.genre
 				},
 				success: function (response) {
 					
 					if(response.hasOwnProperty('data')) {
 						
 						this.books = response.data;
+					}
+					if(response.hasOwnProperty('meta')) {
+						
+						this.pagination = response.meta.pagination;
 					}
 				}.bind(this),
 				error: function (response) {
@@ -164,13 +288,29 @@ module.exports = {
 				complete: function () {
 				}.bind(this)
 			});
+		},
+		
+		changePage: function(e, page) {
+			
+			e.preventDefault();
+			
+			if(page <= 0) {
+				return;
+			}
+			
+			if(page > this.pagination.total_pages) {
+				
+				return;
+			}
+			
+			this.pagination.current_page = page;
 		}
 	},
 
 	events: {}
 }
 },{"./books_listing.template.html":2}],2:[function(require,module,exports){
-module.exports = '<div class="row" xmlns="http://www.w3.org/1999/html">\n	<div class="col-xs-12">\n		<div class="panel panel-default">\n			<div class="panel-heading">\n				<h3 class="panel-title">Search options</h3>\n			</div>\n			<div class="panel-body">\n				<div class="row">\n					<div class="col-xs-12">\n						<div class="row">\n							<div class="col-md-3"><p class="form-control-static">Keywords</p></div>\n							<div class="col-md-9"><input type="text" class="form-control" v-model="keyword"/></div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" multiple class="form-control">\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n									<option value="">1</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" v-el:filterAuthorEl multiple class="form-control" v-model="filter.authors">\n									<option value="{{author.id}}" v-for="author in authors">{{author.fullname}}</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">View</p></div>\n							<div class="col-md-9">\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'grid\' }" v-on:click="switchType(\'grid\', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid</button>\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'list\' }" v-on:click="switchType(\'list\', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List</button>\n							</div>\n						</div>\n					</div>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'grid\'">\n	<template v-for="book in books">\n		<div class="col-sm-6 col-md-3" >\n			<div class="widget widget-book-small">\n				<div class="img-container"\n					 v-bind:style="{ backgroundImage: \'url(\'+book.cover_path+\')\'}">\n					<span class="price-tag">RM{{book.price}}</span>\n				</div>\n				<h3>{{book.title}}</h3>\n	\n				<p>{{book.excerpt}}</p>\n				<a href="#" class="btn btn-primary">Read more</a>\n			</div>\n		</div>\n		<div class="clearfix visble-md-block visble-lg-block" v-if="($index+1) % 4 == 0"></div>\n		<div class="clearfix visible-sm-block" v-if="($index+1) % 2 == 0"></div>\n	</template>\n</div>\n<div class="row" v-if="viewType == \'list\'">\n	<div class="col-xs-12" v-for="book in books">\n		<div class="widget widget-book-list">\n			<div class="row">\n				<div class="col-sm-3">\n					<img v-bind:src="book.cover_path" class="img-responsive" alt=""\n						 style="max-height: 160px;"/>\n				</div>\n				<div class="col-sm-6">\n					<h3>{{book.title}}</h3>\n\n					<p>{{book.excerpt}}</p>\n				</div>\n				<div class="col-sm-3">\n					<h4>RM{{book.price}}</h4>\n					<a href="#" class="btn btn-primary">Read more</a>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>';
+module.exports = '<div class="row" xmlns="http://www.w3.org/1999/html">\n	<div class="col-xs-12">\n		<div class="panel panel-default">\n			<div class="panel-heading">\n				<h3 class="panel-title">Search options</h3>\n			</div>\n			<div class="panel-body">\n				<div class="row">\n					<div class="col-xs-12">\n						<div class="row">\n							<div class="col-md-3"><p class="form-control-static">Keywords</p></div>\n							<div class="col-md-9"><input type="text" class="form-control" v-model="keyword"/></div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" v-el:filterGenreEl class="form-control" v-model="filter.genre">\n									<option value="all">None</option>\n									<option value="{{genre.id}}" v-for="genre in genres">{{ genre.title }}</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" v-el:filterAuthorEl multiple class="form-control"\n										v-model="filter.authors" data-live-search="true">\n									<option value="{{author.id}}" v-for="author in authors">{{author.fullname}}</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Sort</p></div>\n							<div class="col-md-9">\n								<div class="input-group">\n\n									<select v-el:sortEl data-plugin="multiselect" class="form-control"\n											v-model="sort.type">\n										<option value="title" selected="{{sort.type == \'title\'}}">Title</option>\n										<option value="price" selected="{{sort.type == \'price\'}}">Price</option>\n										<option value="released_at" selected="{{sort.type == \'released_at\'}}">Released\n											Date\n										</option>\n									</select>\n									<a href="#" v-on:click="toggleSortDirection" class="input-group-addon">\n										<template v-if="sort.direction == \'ASC\'">\n											<i class="fa fa-arrow-up" style="color: green;"></i>\n										</template>\n										<template v-if="sort.direction == \'DESC\'">\n											<i class="fa fa-arrow-down" style="color: red;"></i>\n										</template>\n									</a>\n								</div>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">View</p></div>\n							<div class="col-md-9">\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'grid\' }"\n										v-on:click="switchType(\'grid\', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid\n								</button>\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'list\' }"\n										v-on:click="switchType(\'list\', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List\n								</button>\n							</div>\n						</div>\n					</div>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n<div class="row">\n	<div class="col-xs-12 text-right">\n		<template v-if="pagination.total_pages > 1">\n			<nav>\n				<ul class="pagination">\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == 1  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page - 1)" aria-label="Previous">\n							<span aria-hidden="true">&laquo;</span>\n						</a>\n					</li>\n					<template v-for="i in pagination.total_pages">\n						<li v-bind:class="{\'active\':pagination.current_page == i+1}"><a href="#" v-on:click="changePage($event, i+1)">{{i+1}}</a></li>	\n					</template>\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == pagination.total_pages  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page + 1)" aria-label="Next">\n							<span aria-hidden="true">&raquo;</span>\n						</a>\n					</li>\n				</ul>\n			</nav>\n		</template>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'grid\'">\n	<template v-for="book in books">\n		<div class="col-sm-6 col-md-3">\n			<div class="widget widget-book-small">\n				<div class="img-container"\n					 v-bind:style="{ backgroundImage: \'url(\'+book.cover_path+\')\'}">\n					<span class="price-tag">RM{{book.price}}</span>\n				</div>\n				<h3>{{book.title}}</h3>\n\n				<p>{{book.excerpt}}</p>\n\n				<p>Released : {{book.released_at}}</p>\n				<a href="#" class="btn btn-primary">Read more</a>\n			</div>\n		</div>\n		<div class="clearfix visble-md-block visble-lg-block" v-if="($index+1) % 4 == 0"></div>\n		<div class="clearfix visible-sm-block" v-if="($index+1) % 2 == 0"></div>\n	</template>\n</div>\n<div class="row" v-if="viewType == \'list\'">\n	<div class="col-xs-12" v-for="book in books">\n		<div class="widget widget-book-list">\n			<div class="row">\n				<div class="col-sm-3">\n					<img v-bind:src="book.cover_path" class="img-responsive" alt=""\n						 style="max-height: 160px;"/>\n				</div>\n				<div class="col-sm-6">\n					<h3>{{book.title}}</h3>\n\n					<p>{{book.excerpt}}</p>\n				</div>\n				<div class="col-sm-3">\n					<h4>RM{{book.price}}</h4>\n\n					<p>Released : {{book.released_at}}</p>\n					<a href="#" class="btn btn-primary">Read more</a>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n\n<div class="row">\n	<div class="col-xs-12 text-right">\n		<template v-if="pagination.total_pages > 1">\n			<nav>\n				<ul class="pagination">\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == 1  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page - 1)" aria-label="Previous">\n							<span aria-hidden="true">&laquo;</span>\n						</a>\n					</li>\n					<template v-for="i in pagination.total_pages">\n						<li v-bind:class="{\'active\':pagination.current_page == i+1}"><a href="#" v-on:click="changePage($event, i+1)">{{i+1}}</a></li>	\n					</template>\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == pagination.total_pages  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page + 1)" aria-label="Next">\n							<span aria-hidden="true">&raquo;</span>\n						</a>\n					</li>\n				</ul>\n			</nav>\n		</template>\n	</div>\n</div>';
 },{}],3:[function(require,module,exports){
 var Vue = require('Vue');
 

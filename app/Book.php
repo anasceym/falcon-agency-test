@@ -31,7 +31,7 @@ class Book extends Model
 	 * 
 	 * @var array
 	 */
-	protected $fillable = ['title','isbn', 'description', 'price', 'released_at', 'cover_path'];
+	protected $fillable = ['title','isbn', 'description', 'price', 'released_at', 'cover_path', 'genre_id'];
 	
 	/**
 	 * Relation to App\Author
@@ -51,7 +51,7 @@ class Book extends Model
 	 */
 	public function getPriceAttribute($value) {
 		
-		return $value/100;
+		return number_format($value/100, 2, '.', ',');
 	}
 
 	/**
@@ -64,7 +64,10 @@ class Book extends Model
 		
 		$this->attributes['price'] = $value*100;
 	}
-	
+
+	/**
+	 * @param $value
+	 */
 	public function setReleasedAtAttribute($value) {
 		
 		try {
@@ -79,7 +82,11 @@ class Book extends Model
 		}
 		
 	}
-	
+
+	/**
+	 * @param $value
+	 * @return mixed|string
+	 */
 	public function getCoverPathAttribute($value) {
 		
 		if($value === '' || $value === null) {
@@ -89,7 +96,11 @@ class Book extends Model
 		
 		return str_replace('{app_path}',env('APP_URL'),$value);
 	}
-	
+
+	/**
+	 * @param $request
+	 * @return \Illuminate\Database\Eloquent\Builder|static
+	 */
 	public static function searchAndFilter($request) {
 		
 		$books = self::with(['authors']);
@@ -106,15 +117,33 @@ class Book extends Model
 			});
 		}
 		
-		if(isset($request['filter']['author'])) {
+		if(isset($request['genre']) && $request['genre'] !== 'all') {
 			
+			$books = $books->where('genre_id', $request['genre']);
+		}
+		
+		if(isset($request['sort'])) {
+			
+			$books = $books->orderBy($request['sort']['type'], $request['sort']['direction']);
 		}
 		
 		return $books;
 	}
-	
+
+	/**
+	 * @param $value
+	 * @return string
+	 */
 	public function getExcerptAttribute($value) {
 		
 		return Str::words($this->attributes['description'], 20);
+	}
+
+	/**
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+	 */
+	public function genre() {
+		
+		return $this->belongsTo('App\Genre');
 	}
 }

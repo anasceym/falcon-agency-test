@@ -38,12 +38,20 @@
 					<img src="{{$book->cover_path}}" class="img-responsive" style="max-height: 150px;" alt=""/>
 				</div>
 				<div class="col-sm-6">
-					<label class="control-label">Author(s)</label>
-					<ol>
-						@foreach($book->authors as $author)
-							<li>{{ $author->fullname }}</li>
-						@endforeach
-					</ol>
+					<div class="row">
+						<div class="col-xs-12">
+							<label class="control-label">Author(s)</label>
+							<ol>
+								@foreach($book->authors as $author)
+									<li>{{ $author->fullname }}</li>
+								@endforeach
+							</ol>
+						</div>
+						<div class="col-xs-12">
+							<label class="control-label">Genre</label>
+							<p class="form-control-static">{{$book->genre->title}}</p>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div class="form-group row">

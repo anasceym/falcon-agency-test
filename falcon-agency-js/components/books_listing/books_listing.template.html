@@ -14,29 +14,54 @@
 						<div class="row" style="margin-top:10px;">
 							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>
 							<div class="col-md-9">
-								<select data-plugin="multiselect" multiple class="form-control">
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
-									<option value="">1</option>
+								<select data-plugin="multiselect" v-el:filterGenreEl class="form-control" v-model="filter.genre">
+									<option value="all">None</option>
+									<option value="{{genre.id}}" v-for="genre in genres">{{ genre.title }}</option>
 								</select>
 							</div>
 						</div>
 						<div class="row" style="margin-top:10px;">
 							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>
 							<div class="col-md-9">
-								<select data-plugin="multiselect" v-el:filterAuthorEl multiple class="form-control" v-model="filter.authors">
+								<select data-plugin="multiselect" v-el:filterAuthorEl multiple class="form-control"
+										v-model="filter.authors" data-live-search="true">
 									<option value="{{author.id}}" v-for="author in authors">{{author.fullname}}</option>
 								</select>
 							</div>
 						</div>
 						<div class="row" style="margin-top:10px;">
+							<div class="col-md-3"><p class="form-control-static">Sort</p></div>
+							<div class="col-md-9">
+								<div class="input-group">
+
+									<select v-el:sortEl data-plugin="multiselect" class="form-control"
+											v-model="sort.type">
+										<option value="title" selected="{{sort.type == 'title'}}">Title</option>
+										<option value="price" selected="{{sort.type == 'price'}}">Price</option>
+										<option value="released_at" selected="{{sort.type == 'released_at'}}">Released
+											Date
+										</option>
+									</select>
+									<a href="#" v-on:click="toggleSortDirection" class="input-group-addon">
+										<template v-if="sort.direction == 'ASC'">
+											<i class="fa fa-arrow-up" style="color: green;"></i>
+										</template>
+										<template v-if="sort.direction == 'DESC'">
+											<i class="fa fa-arrow-down" style="color: red;"></i>
+										</template>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row" style="margin-top:10px;">
 							<div class="col-md-3"><p class="form-control-static">View</p></div>
 							<div class="col-md-9">
-								<button class="btn btn-primary" v-bind:class="{ 'active' : viewType == 'grid' }" v-on:click="switchType('grid', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid</button>
-								<button class="btn btn-primary" v-bind:class="{ 'active' : viewType == 'list' }" v-on:click="switchType('list', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List</button>
+								<button class="btn btn-primary" v-bind:class="{ 'active' : viewType == 'grid' }"
+										v-on:click="switchType('grid', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid
+								</button>
+								<button class="btn btn-primary" v-bind:class="{ 'active' : viewType == 'list' }"
+										v-on:click="switchType('list', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List
+								</button>
 							</div>
 						</div>
 					</div>
@@ -45,17 +70,42 @@
 		</div>
 	</div>
 </div>
+<div class="row">
+	<div class="col-xs-12 text-right">
+		<template v-if="pagination.total_pages > 1">
+			<nav>
+				<ul class="pagination">
+					<li v-bind:class="{ 'disabled' : pagination.current_page == 1  }">
+						<a href="#" v-on:click="changePage($event, pagination.current_page - 1)" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<template v-for="i in pagination.total_pages">
+						<li v-bind:class="{'active':pagination.current_page == i+1}"><a href="#" v-on:click="changePage($event, i+1)">{{i+1}}</a></li>	
+					</template>
+					<li v-bind:class="{ 'disabled' : pagination.current_page == pagination.total_pages  }">
+						<a href="#" v-on:click="changePage($event, pagination.current_page + 1)" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</template>
+	</div>
+</div>
 <div class="row" v-if="viewType == 'grid'">
 	<template v-for="book in books">
-		<div class="col-sm-6 col-md-3" >
+		<div class="col-sm-6 col-md-3">
 			<div class="widget widget-book-small">
 				<div class="img-container"
 					 v-bind:style="{ backgroundImage: 'url('+book.cover_path+')'}">
 					<span class="price-tag">RM{{book.price}}</span>
 				</div>
 				<h3>{{book.title}}</h3>
-	
+
 				<p>{{book.excerpt}}</p>
+
+				<p>Released : {{book.released_at}}</p>
 				<a href="#" class="btn btn-primary">Read more</a>
 			</div>
 		</div>
@@ -78,9 +128,35 @@
 				</div>
 				<div class="col-sm-3">
 					<h4>RM{{book.price}}</h4>
+
+					<p>Released : {{book.released_at}}</p>
 					<a href="#" class="btn btn-primary">Read more</a>
 				</div>
 			</div>
 		</div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12 text-right">
+		<template v-if="pagination.total_pages > 1">
+			<nav>
+				<ul class="pagination">
+					<li v-bind:class="{ 'disabled' : pagination.current_page == 1  }">
+						<a href="#" v-on:click="changePage($event, pagination.current_page - 1)" aria-label="Previous">
+							<span aria-hidden="true">&laquo;</span>
+						</a>
+					</li>
+					<template v-for="i in pagination.total_pages">
+						<li v-bind:class="{'active':pagination.current_page == i+1}"><a href="#" v-on:click="changePage($event, i+1)">{{i+1}}</a></li>	
+					</template>
+					<li v-bind:class="{ 'disabled' : pagination.current_page == pagination.total_pages  }">
+						<a href="#" v-on:click="changePage($event, pagination.current_page + 1)" aria-label="Next">
+							<span aria-hidden="true">&raquo;</span>
+						</a>
+					</li>
+				</ul>
+			</nav>
+		</template>
 	</div>
 </div>

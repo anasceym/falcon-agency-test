@@ -23,6 +23,11 @@ $api->version('v1', function ($api) {
 		'as' => 'api.books.index',
 		'uses' => 'App\Api\Controllers\BooksController@index'
 	]);
+	
+	$api->get('genres', [
+		'as' => 'api.genres.index',
+		'uses' => 'App\Api\Controllers\GenresController@index'
+	]);
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'admin'], function() {
