@@ -27,6 +27,7 @@ class BooksTransformer extends TransformerAbstract {
 			'title' => $book->title,
 			'excerpt' => $book->excerpt,
 			'price' => $book->price,
+			'cover_path' => $book->cover_path
 		];
     }
 	

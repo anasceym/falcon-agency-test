@@ -82,6 +82,11 @@ class Book extends Model
 	
 	public function getCoverPathAttribute($value) {
 		
+		if($value === '' || $value === null) {
+			
+			return env('APP_URL').'/images/book-cover.png';
+		}
+		
 		return str_replace('{app_path}',env('APP_URL'),$value);
 	}
 	

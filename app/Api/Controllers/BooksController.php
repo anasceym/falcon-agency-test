@@ -16,7 +16,7 @@ class BooksController extends Controller
 	
     public function index(Request $request) {
 		
-		$paginator = Book::searchAndFilter($request->all())->paginate(10);
+		$paginator = Book::searchAndFilter($request->all())->paginate(8);
 		
 		return $this->response->paginator($paginator, new BooksTransformer());
 	}
