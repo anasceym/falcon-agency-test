@@ -73,6 +73,10 @@ Route::get('books', [
 	'as' => 'books.index',
 	'uses' => 'BooksController@index'
 ]);
+Route::get('books/{book}', [
+	'as' => 'books.show',
+	'uses' => 'BooksController@show'
+]);
 
 
 Route::auth();

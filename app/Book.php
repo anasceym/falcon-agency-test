@@ -146,4 +146,9 @@ class Book extends Model
 		
 		return $this->belongsTo('App\Genre');
 	}
+	
+	public function getRelatedBooksAttribute() {
+		
+		return self::where('genre_id', $this->attributes['genre_id'])->get();
+	}
 }
