@@ -26,7 +26,7 @@
 <div class="form-group row">
 	<div class="col-sm-6">
 		<label class="control-label">Book cover</label>
-		<input type="file" class="dropify" data-default-file="{{$book->cover_path}}" data-plugin="dropify" name="book_cover"/>
+		<input type="file" class="dropify"  accept="image/*" data-default-file="{{$book->cover_path}}" data-plugin="dropify" name="book_cover"/>
 	</div>
 	<div class="col-sm-6">
 		<div class="row">
