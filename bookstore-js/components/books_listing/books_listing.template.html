@@ -106,7 +106,7 @@
 				<p>{{book.excerpt}}</p>
 
 				<p>Released : {{book.released_at}}</p>
-				<a href="#" class="btn btn-primary">Read more</a>
+				<a href="{{book.show_link}}" class="btn btn-primary">Read more</a>
 			</div>
 		</div>
 		<div class="clearfix visble-md-block visble-lg-block" v-if="($index+1) % 4 == 0"></div>
@@ -130,7 +130,7 @@
 					<h4>RM{{book.price}}</h4>
 
 					<p>Released : {{book.released_at}}</p>
-					<a href="#" class="btn btn-primary">Read more</a>
+					<a href="{{book.show_link}}" class="btn btn-primary">Read more</a>
 				</div>
 			</div>
 		</div>

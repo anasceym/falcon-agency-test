@@ -31,7 +31,7 @@ class Book extends Model
 	 * 
 	 * @var array
 	 */
-	protected $fillable = ['title','isbn', 'description', 'price', 'released_at', 'cover_path', 'genre_id'];
+	protected $fillable = ['title','isbn', 'description', 'price', 'released_at', 'cover_path', 'genre_id', 'show_link'];
 	
 	/**
 	 * Relation to App\Author
@@ -146,9 +146,24 @@ class Book extends Model
 		
 		return $this->belongsTo('App\Genre');
 	}
-	
+
+	/**
+	 * Get the related books
+	 * 
+	 * @return mixed
+	 */
 	public function getRelatedBooksAttribute() {
 		
 		return self::where('genre_id', $this->attributes['genre_id'])->get();
+	}
+
+	/**
+	 * Get show book link
+	 * 
+	 * @param $value
+	 */
+	public function getShowLinkAttribute($value) {
+		
+		return route('books.show', ['book' => $this->attributes['id']]);
 	}
 }
