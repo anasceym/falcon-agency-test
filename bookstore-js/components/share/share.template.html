@@ -1,0 +1,18 @@
+<a href="#" class="btn btn-primary btn-lg" style="margin-top:20px;" v-on:click="openShareModal"><i class="fa fa-share"></i>&nbsp;&nbsp;Share</a>
+
+<!-- Modal -->
+<div class="modal fade" v-el:shareModal tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-left">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Share to...</h4>
+      </div>
+      <div class="modal-body text-center">
+		  <a class="btn btn-default btn-share btn-facebook" href="#" v-on:click="buttonShareClickHandler($event, 'facebook')"><i class="fa fa-facebook"></i></a>
+		  <a class="btn btn-default btn-share btn-twitter" href="#" v-on:click="buttonShareClickHandler($event, 'twitter')"><i class="fa fa-twitter"></i></a>
+		  <a class="btn btn-default btn-share btn-google-plus" href="#" v-on:click="buttonShareClickHandler($event, 'gplus')"><i class="fa fa-google-plus"></i></a>
+      </div>
+    </div>
+  </div>
+</div>

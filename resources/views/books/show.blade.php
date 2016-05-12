@@ -12,7 +12,9 @@
 				</div>
 				<div class="col-sm-6 text-right">
 					<a href="#" class="btn btn-success btn-lg"><i class="fa fa-money"></i>&nbsp;&nbsp;BUY</a><br/>
-					<a href="#" class="btn btn-primary btn-lg" style="margin-top:20px;"><i class="fa fa-share"></i>&nbsp;&nbsp;Share</a>
+					<share
+							data-fb-app-id="{{env('FB_APP_ID')}}" 
+							data-share="{{ $book->toJson()  }}" ></share>
 				</div>
 			</div>
 			<hr/>

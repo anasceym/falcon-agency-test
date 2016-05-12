@@ -17,6 +17,7 @@ window.Application = new Vue({
 	
 	components: {
 		booklisting: require('./components/books_listing/books_listing.js'), 
+		share: require('./components/share/share.js'), 
 	},
 	
 	methods: {

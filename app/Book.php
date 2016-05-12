@@ -33,6 +33,8 @@ class Book extends Model
 	 */
 	protected $fillable = ['title','isbn', 'description', 'price', 'released_at', 'cover_path', 'genre_id', 'show_link'];
 	
+	protected $appends = ['show_link', 'excerpt'];
+	
 	/**
 	 * Relation to App\Author
 	 * 

@@ -317,6 +317,97 @@ module.exports = {
 },{"./books_listing.template.html":2}],2:[function(require,module,exports){
 module.exports = '<div class="row" xmlns="http://www.w3.org/1999/html">\n	<div class="col-xs-12">\n		<div class="panel panel-default">\n			<div class="panel-heading">\n				<h3 class="panel-title">Search options</h3>\n			</div>\n			<div class="panel-body">\n				<div class="row">\n					<div class="col-xs-12">\n						<div class="row">\n							<div class="col-md-3"><p class="form-control-static">Keywords</p></div>\n							<div class="col-md-9"><input type="text" class="form-control" v-model="keyword"/></div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by genre</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" v-el:filterGenreEl class="form-control" v-model="filter.genre">\n									<option value="all">None</option>\n									<option value="{{genre.id}}" v-for="genre in genres">{{ genre.title }}</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Filter by author</p></div>\n							<div class="col-md-9">\n								<select data-plugin="multiselect" v-el:filterAuthorEl multiple class="form-control"\n										v-model="filter.authors" data-live-search="true">\n									<option value="{{author.id}}" v-for="author in authors">{{author.fullname}}</option>\n								</select>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">Sort</p></div>\n							<div class="col-md-9">\n								<div class="input-group">\n\n									<select v-el:sortEl data-plugin="multiselect" class="form-control"\n											v-model="sort.type">\n										<option value="title" selected="{{sort.type == \'title\'}}">Title</option>\n										<option value="price" selected="{{sort.type == \'price\'}}">Price</option>\n										<option value="released_at" selected="{{sort.type == \'released_at\'}}">Released\n											Date\n										</option>\n									</select>\n									<a href="#" v-on:click="toggleSortDirection" class="input-group-addon">\n										<template v-if="sort.direction == \'ASC\'">\n											<i class="fa fa-arrow-up" style="color: green;"></i>\n										</template>\n										<template v-if="sort.direction == \'DESC\'">\n											<i class="fa fa-arrow-down" style="color: red;"></i>\n										</template>\n									</a>\n								</div>\n							</div>\n						</div>\n						<div class="row" style="margin-top:10px;">\n							<div class="col-md-3"><p class="form-control-static">View</p></div>\n							<div class="col-md-9">\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'grid\' }"\n										v-on:click="switchType(\'grid\', $event)"><i class="fa fa-th-large"></i>&nbsp;Grid\n								</button>\n								<button class="btn btn-primary" v-bind:class="{ \'active\' : viewType == \'list\' }"\n										v-on:click="switchType(\'list\', $event)"><i class="fa fa-list"></i>&nbsp;&nbsp;List\n								</button>\n							</div>\n						</div>\n					</div>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n<div class="row" v-if="!isLoading">\n	<div class="col-xs-12 text-right">\n		<template v-if="pagination.total_pages > 1">\n			<nav>\n				<ul class="pagination">\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == 1  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page - 1)" aria-label="Previous">\n							<span aria-hidden="true">&laquo;</span>\n						</a>\n					</li>\n					<template v-for="i in pagination.total_pages">\n						<li v-bind:class="{\'active\':pagination.current_page == i+1}"><a href="#" v-on:click="changePage($event, i+1)">{{i+1}}</a></li>	\n					</template>\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == pagination.total_pages  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page + 1)" aria-label="Next">\n							<span aria-hidden="true">&raquo;</span>\n						</a>\n					</li>\n				</ul>\n			</nav>\n		</template>\n	</div>\n</div>\n<div class="row" v-if="isLoading">\n	<div class="col-xs-12 text-center">\n		<h1><i class="fa fa-spin fa-spinner" style="font-size:50px;"></i></h1>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'grid\' && !isLoading">\n	<template v-for="book in books">\n		<div class="col-sm-6 col-md-3">\n			<div class="widget widget-book-small">\n				<div class="img-container"\n					 v-bind:style="{ backgroundImage: \'url(\'+book.cover_path+\')\'}">\n					<span class="price-tag">RM{{book.price}}</span>\n				</div>\n				<h3>{{book.title}}</h3>\n\n				<p>{{book.excerpt}}</p>\n\n				<p>Released : {{book.released_at}}</p>\n				<a href="{{book.show_link}}" class="btn btn-primary">Read more</a>\n			</div>\n		</div>\n		<div class="clearfix visble-md-block visble-lg-block" v-if="($index+1) % 4 == 0"></div>\n		<div class="clearfix visible-sm-block" v-if="($index+1) % 2 == 0"></div>\n	</template>\n</div>\n\n<div class="row" v-if="!books.length && !isLoading">\n	<div class="col-xs-12">\n		<h3>No books found with this search criteria. Try again okay!</h3>\n	</div>\n</div>\n<div class="row" v-if="viewType == \'list\' && !isLoading">\n	<div class="col-xs-12" v-for="book in books">\n		<div class="widget widget-book-list">\n			<div class="row">\n				<div class="col-sm-3">\n					<img v-bind:src="book.cover_path" class="img-responsive" alt=""\n						 style="max-height: 160px;"/>\n				</div>\n				<div class="col-sm-6">\n					<h3>{{book.title}}</h3>\n\n					<p>{{book.excerpt}}</p>\n				</div>\n				<div class="col-sm-3">\n					<h4>RM{{book.price}}</h4>\n\n					<p>Released : {{book.released_at}}</p>\n					<a href="{{book.show_link}}" class="btn btn-primary">Read more</a>\n				</div>\n			</div>\n		</div>\n	</div>\n</div>\n\n<div class="row" v-if="!isLoading">\n	<div class="col-xs-12 text-right">\n		<template v-if="pagination.total_pages > 1">\n			<nav>\n				<ul class="pagination">\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == 1  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page - 1)" aria-label="Previous">\n							<span aria-hidden="true">&laquo;</span>\n						</a>\n					</li>\n					<template v-for="i in pagination.total_pages">\n						<li v-bind:class="{\'active\':pagination.current_page == i+1}"><a href="#" v-on:click="changePage($event, i+1)">{{i+1}}</a></li>	\n					</template>\n					<li v-bind:class="{ \'disabled\' : pagination.current_page == pagination.total_pages  }">\n						<a href="#" v-on:click="changePage($event, pagination.current_page + 1)" aria-label="Next">\n							<span aria-hidden="true">&raquo;</span>\n						</a>\n					</li>\n				</ul>\n			</nav>\n		</template>\n	</div>\n</div>';
 },{}],3:[function(require,module,exports){
+module.exports = {
+	template: require('./share.template.html'),
+
+	data: function () {
+		return {
+			
+			shareMeta: {
+				title: '',
+				description: '',
+				uploadedImgUrl: '',
+				url: ''
+			}
+		}
+	},
+	init: function () {
+		
+		this.Dialog = require('share-dialog');
+	},
+	ready: function () {
+		
+		var shareData = JSON.parse(this.dataShare);
+		
+		this.shareMeta.title = shareData.title;
+		this.shareMeta.description = shareData.excerpt;
+		this.shareMeta.uploadedImgUrl = shareData.cover_path;
+		this.shareMeta.url = shareData.show_link;
+	},
+
+	props: [
+		'data-fb-app-id',
+		'data-share'
+	],
+
+	methods: {
+		buttonShareClickHandler: function(e, type) {
+			
+			e.preventDefault();
+			
+			switch (type) {
+				case 'facebook':
+					this.shareFacebook();
+					break;
+				case 'twitter':
+					this.shareTwitter();
+					break;
+				case 'gplus':
+					this.shareGplus();
+					break;
+			};	
+		},
+		openShareModal: function(e) {
+			e.preventDefault();
+			
+			$(this.$els.sharemodal).modal();
+		},
+		shareFacebook: function () {
+
+			var facebookDialog = this.Dialog.facebook(this.dataFbAppId, this.shareMeta.url, this.shareMeta.url);
+			facebookDialog.params({
+				name: this.shareMeta.title,
+				title: this.shareMeta.title,
+				description: this.shareMeta.description,
+				link: this.shareMeta.url,
+				picture: this.shareMeta.uploadedImgUrl,
+				display: 'popup'
+			});
+			facebookDialog.open();
+		},
+		shareTwitter: function() {
+			
+			var twitterDialog = this.Dialog.twitter(this.shareMeta.url);
+			twitterDialog.params({
+				text: this.shareMeta.title,
+				hashtags: 'SimpleBookstore,',
+				via: 'simplebookstore'
+			});
+			twitterDialog.open();
+		},
+		shareGplus: function() {
+			
+			var gplusDialog = this.Dialog.gplus(this.shareMeta.url);
+			
+			gplusDialog.open();
+		},
+	},
+
+	events: {}
+}
+},{"./share.template.html":4,"share-dialog":8}],4:[function(require,module,exports){
+module.exports = '<a href="#" class="btn btn-primary btn-lg" style="margin-top:20px;" v-on:click="openShareModal"><i class="fa fa-share"></i>&nbsp;&nbsp;Share</a>\n\n<!-- Modal -->\n<div class="modal fade" v-el:shareModal tabindex="-1" role="dialog">\n  <div class="modal-dialog" role="document">\n    <div class="modal-content">\n      <div class="modal-header text-left">\n        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>\n        <h4 class="modal-title" id="myModalLabel">Share to...</h4>\n      </div>\n      <div class="modal-body text-center">\n		  <a class="btn btn-default btn-share btn-facebook" href="#" v-on:click="buttonShareClickHandler($event, \'facebook\')"><i class="fa fa-facebook"></i></a>\n		  <a class="btn btn-default btn-share btn-twitter" href="#" v-on:click="buttonShareClickHandler($event, \'twitter\')"><i class="fa fa-twitter"></i></a>\n		  <a class="btn btn-default btn-share btn-google-plus" href="#" v-on:click="buttonShareClickHandler($event, \'gplus\')"><i class="fa fa-google-plus"></i></a>\n      </div>\n    </div>\n  </div>\n</div>';
+},{}],5:[function(require,module,exports){
 var Vue = require('Vue');
 
 window.Application = new Vue({
@@ -336,6 +427,7 @@ window.Application = new Vue({
 	
 	components: {
 		booklisting: require('./components/books_listing/books_listing.js'), 
+		share: require('./components/share/share.js'), 
 	},
 	
 	methods: {
@@ -405,7 +497,7 @@ window.Application = new Vue({
 		}
 	}
 });
-},{"./components/books_listing/books_listing.js":1,"Vue":4}],4:[function(require,module,exports){
+},{"./components/books_listing/books_listing.js":1,"./components/share/share.js":3,"Vue":6}],6:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.22
@@ -10429,7 +10521,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":5}],5:[function(require,module,exports){
+},{"_process":7}],7:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -10525,4 +10617,191 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}]},{},[3]);
+},{}],8:[function(require,module,exports){
+var xtend = require('xtend')
+
+module.exports = ShareDialog
+
+function ShareDialog(url) {
+  this._url = url
+}
+
+ShareDialog.prototype._config = 
+  { toolbar: 0
+  , status: 0
+  , width: 650
+  , height: 306
+  , top: function(config)
+    { return screen.availHeight/2 - config.height/2 }
+  , left: function(config)
+    { return screen.availWidth/2  - config.width/2  }  
+}
+
+ShareDialog.prototype.params = function(params) {
+  if (arguments.length===0) return this._params
+  this._params = xtend(this._params, params)
+  return this
+}
+
+ShareDialog.prototype.config = function(config) {
+  if (arguments.length===0) return this._config
+  this._config = xtend(this._config, config)
+  return this
+}
+
+ShareDialog.prototype.get = function() {
+  var params = join(this._params, '&', function(s){
+    if (s.indexOf('%')>-1)
+      s = decodeURIComponent(s)
+    return encodeURIComponent(s)
+  })
+  return this._url + '?' + params
+}
+
+ShareDialog.prototype.open = function() {
+  var url = this.get()
+  var config =  join(this._config, ',')
+
+  window.open(url, 'sharer', config)
+};
+
+ShareDialog.tumblr = {
+  link: function(url, name, description) {
+    var dialog = new ShareDialog('https://www.tumblr.com/share/link')
+
+    return dialog.params({
+      url: url || required,
+      name: name || null,
+      description: description || null
+    })
+  },
+
+  photo: function(source, caption, clickthru) {
+    var dialog = new ShareDialog('https://www.tumblr.com/share/photo')
+
+    return dialog.params({
+      source: source || required,
+      caption: caption || null,
+      clickthru: clickthru || null
+    })
+  }
+}
+
+ShareDialog.gplus = function(url) {
+  var dialog = new ShareDialog('https://plus.google.com/u/0/share')
+  return dialog.params({url: url || required})
+}
+
+ShareDialog.pinterest = function(url, media, description) {
+  var dialog = new ShareDialog('https://pinterest.com/pin/create/button/')
+
+  return dialog.params({
+    url: url || required,
+    media: media || required,
+    description: description || null
+  })
+}
+
+ShareDialog.twitter = function(url, text, via, in_reply_to, hashtags, related) {
+  var dialog = new ShareDialog('https://twitter.com/intent/tweet')
+
+  dialog.params({
+    url: url || required,
+    via: via || null,
+    text: text || null,
+    in_reply_to: in_reply_to || null,
+    hashtags: hashtags || null, // array -> csv
+    related: related || null //array -> csv
+  })
+
+  return dialog.config({width: 550, height: 420})
+}
+
+ShareDialog.linkedIn = function(url, title, source, summary) {
+  var dialog = new ShareDialog('https://www.linkedin.com/shareArticle')
+
+  dialog.params({
+    mini: 'true',
+    url: url || required,
+    title: title || null,
+    source: source || null,
+    summary: summary || null
+  })
+
+  return dialog.config({width: 520, height: 570})
+}
+
+// facebook(app_id, href, redirect_uri) returns facebook.com/dialog/share?..
+// facebook(href) returns facebook.com/sharer/sharer.php?u=..
+ShareDialog.facebook = function(app_id, href, redirect_uri) {
+  var dialog;
+
+  // Legacy sharer.php (doesn't require an app id)
+  if (href == null && redirect_uri == null) {
+    href = app_id
+    dialog = new ShareDialog('https://facebook.com/sharer/sharer.php')
+    return dialog.params({
+      u: href || required
+    })
+  }
+
+  // Modern dialog
+  dialog = new ShareDialog('https://facebook.com/dialog/share')
+
+  return dialog.params({
+    display: 'popup',
+    href: href || required,
+    app_id: app_id || required,
+    redirect_uri: redirect_uri || required
+  })
+}
+
+function required(object, key) {
+  throw new Error('Required: '+key)
+}
+
+function join(obj, glue, encode) {
+  var result = []
+
+  for(var k in obj) {
+    var v = obj[k]
+
+    if (typeof v === 'function')
+      v = v(obj, k)
+    if (v === null)
+      continue
+    if (typeof v === 'array' || v instanceof Array)
+      v = v.join(',')
+    if (typeof v === 'object')
+      v = JSON.stringify(v)
+    if (encode)
+      v = encode(v)
+
+    result.push(k + '=' + v)
+  }
+
+  return result.join(glue)
+}
+
+},{"xtend":9}],9:[function(require,module,exports){
+module.exports = extend
+
+var hasOwnProperty = Object.prototype.hasOwnProperty;
+
+function extend() {
+    var target = {}
+
+    for (var i = 0; i < arguments.length; i++) {
+        var source = arguments[i]
+
+        for (var key in source) {
+            if (hasOwnProperty.call(source, key)) {
+                target[key] = source[key]
+            }
+        }
+    }
+
+    return target
+}
+
+},{}]},{},[5]);
