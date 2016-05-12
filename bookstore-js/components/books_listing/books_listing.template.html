@@ -70,7 +70,7 @@
 		</div>
 	</div>
 </div>
-<div class="row">
+<div class="row" v-if="!isLoading">
 	<div class="col-xs-12 text-right">
 		<template v-if="pagination.total_pages > 1">
 			<nav>
@@ -93,7 +93,12 @@
 		</template>
 	</div>
 </div>
-<div class="row" v-if="viewType == 'grid'">
+<div class="row" v-if="isLoading">
+	<div class="col-xs-12 text-center">
+		<h1><i class="fa fa-spin fa-spinner" style="font-size:50px;"></i></h1>
+	</div>
+</div>
+<div class="row" v-if="viewType == 'grid' && !isLoading">
 	<template v-for="book in books">
 		<div class="col-sm-6 col-md-3">
 			<div class="widget widget-book-small">
@@ -113,7 +118,7 @@
 		<div class="clearfix visible-sm-block" v-if="($index+1) % 2 == 0"></div>
 	</template>
 </div>
-<div class="row" v-if="viewType == 'list'">
+<div class="row" v-if="viewType == 'list' && !isLoading">
 	<div class="col-xs-12" v-for="book in books">
 		<div class="widget widget-book-list">
 			<div class="row">
@@ -137,7 +142,7 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="row" v-if="!isLoading">
 	<div class="col-xs-12 text-right">
 		<template v-if="pagination.total_pages > 1">
 			<nav>

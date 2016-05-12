@@ -23,7 +23,9 @@ module.exports = {
 			
 			pagination: {
 				current_page: 1
-			}
+			},
+			
+			isLoading: true
 		}
 	},
 	init: function () {
@@ -258,6 +260,8 @@ module.exports = {
 		
 		fetchBooks: function() {
 			
+			this.isLoading = true;
+			
 			$.ajax({
 				url: this.dataApiBooksUrl,
 				method: 'get',
@@ -285,6 +289,7 @@ module.exports = {
 
 				}.bind(this),
 				complete: function () {
+					this.isLoading = false;
 				}.bind(this)
 			});
 		},
