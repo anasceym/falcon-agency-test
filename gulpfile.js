@@ -21,7 +21,7 @@ var config = {
     lessPath: path.join('resources', 'less'),
     bowerDir: 'bower_components',
     nodeDir: 'node_modules',
-    appPath: path.join('.', 'falcon-agency-js')
+    appPath: path.join('.', 'bookstore-js')
 }
 
 /**
