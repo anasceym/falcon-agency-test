@@ -15,7 +15,7 @@
 <div class="form-group row">
 	<div class="col-sm-6">
 		<label class="control-label">Price</label>
-		<input class="form-control" type="text" data-plugin="touchspin" data-prefix="RM" data-steps="50"
+		<input class="form-control" type="text" data-plugin="touchspin" data-prefix="RM" data-step="0.1"
 			   data-decimals="2" data-min="0" data-max="9999999999" value="{{ Input::old('price') ? Input::old('price') : $book->price }}" name="price" />
 	</div>
 	<div class="col-sm-6">

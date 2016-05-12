@@ -357,8 +357,8 @@ window.Application = new Vue({
 					'postfix',
 					'min',
 					'max',
-					'steps',
-					'decimals'
+					'step',
+					'decimals' 
 				];
 
 				var options = {};
