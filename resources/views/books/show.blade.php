@@ -15,7 +15,7 @@
 					<a href="#" class="btn btn-primary btn-lg" style="margin-top:20px;"><i class="fa fa-share"></i>&nbsp;&nbsp;Share</a>
 				</div>
 			</div>
-
+			<hr/>
 			<h2>{{$book->title}}</h2>
 
 			<p>{{$book->description}}</p>
