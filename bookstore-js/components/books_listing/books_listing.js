@@ -106,7 +106,7 @@ module.exports = {
 			
 			if(queryString.hasOwnProperty('keyword')) {
 				
-				this.keyword = queryString['keyword'];
+				this.keyword = queryString['keyword'].replace('+', ' ');
 			}
 			
 			if(queryString.hasOwnProperty('authors[]')) {
