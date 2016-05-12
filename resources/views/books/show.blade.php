@@ -36,6 +36,10 @@
 					<h4>Released date</h4>
 
 					<p>{{$book->released_at->format('d F Y')}}</p>
+					
+					<h4>Genre</h4>
+
+					<p>{{$book->genre->title }}</p>
 				</div>
 				<div class="col-sm-4">
 					<h4>Price</h4>
