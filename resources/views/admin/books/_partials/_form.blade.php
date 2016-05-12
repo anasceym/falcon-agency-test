@@ -2,7 +2,7 @@
 
 @include('_partials._display_error')
 
-<div class="form-group row">
+<div class="form-group row required">
 	<div class="col-sm-6">
 		<label class="control-label">Title</label>
 		<input class="form-control" name="title" type="text" value="{{  Input::old('title') ? Input::old('title') : $book->title }}"/>
@@ -12,7 +12,7 @@
 		<input class="form-control" name="isbn" type="text" value="{{ Input::old('isbn') ? Input::old('isbn') : $book->isbn }}"/>
 	</div>
 </div>
-<div class="form-group row">
+<div class="form-group row required">
 	<div class="col-sm-6">
 		<label class="control-label">Price</label>
 		<input class="form-control" type="text" data-plugin="touchspin" data-prefix="RM" data-step="0.1"
@@ -20,7 +20,7 @@
 	</div>
 	<div class="col-sm-6">
 		<label class="control-label">Released date</label>
-		<input class="form-control" type="text" data-plugin="datepicker" value="{{ Input::old('released_at') ? Input::old('released_at') : $book->released_at ? $book->released_at->format('m/d/Y') : '' }}" name="released_at"/>
+		<input class="form-control" type="text" data-plugin="datepicker" value="{{ Input::old('released_at') ? Input::old('released_at') : ($book->released_at ? $book->released_at->format('m/d/Y') : '') }}" name="released_at"/>
 	</div>
 </div>
 <div class="form-group row">

@@ -38,7 +38,7 @@ class BookRequest extends Request
 		
         return [
             'title' => 'required',
-        	'isbn' => 'required|unique:books,isbn,260',
+        	'isbn' => 'required|unique',
 			'price' => 'required',
 			'released_at' => 'required|date_format:m/d/Y'
         ];
