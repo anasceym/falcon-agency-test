@@ -20,13 +20,13 @@
 		<div class="collapse navbar-collapse" id="app-navbar-collapse">
 			<!-- Left Side Of Navbar -->
 			<ul class="nav navbar-nav">
-				
+				<?php $currentRouteName = Route::current()->getName() ?>
+				<li class="{{ $currentRouteName === 'books.index' ? 'active' : '' }}"><a href="{{ route('books.index') }}">Books Listing</a></li>
 				@if (Auth::check())
-					<?php $currentRouteName = Route::current()->getName() ?>
 					<li class="{{ $currentRouteName === 'admin.books.index' || 
 					$currentRouteName === 'admin.books.new' ||
 					$currentRouteName === 'admin.books.edit' ||
-					$currentRouteName === 'admin.books.show' ? 'active' : '' }}"><a href="{{ route('admin.books.index') }}">Books</a></li>
+					$currentRouteName === 'admin.books.show' ? 'active' : '' }}"><a href="{{ route('admin.books.index') }}">Manage Books</a></li>
 				@endif
 			</ul>
 
