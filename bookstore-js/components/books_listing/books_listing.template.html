@@ -118,6 +118,12 @@
 		<div class="clearfix visible-sm-block" v-if="($index+1) % 2 == 0"></div>
 	</template>
 </div>
+
+<div class="row" v-if="!books.length && !isLoading">
+	<div class="col-xs-12">
+		<h3>No books found with this search criteria. Try again okay!</h3>
+	</div>
+</div>
 <div class="row" v-if="viewType == 'list' && !isLoading">
 	<div class="col-xs-12" v-for="book in books">
 		<div class="widget widget-book-list">
