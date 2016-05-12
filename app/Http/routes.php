@@ -30,7 +30,7 @@ $api->version('v1', function ($api) {
 	]);
 });
 
-Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'admin'], function() {
+Route::group(['middleware' => 'auth', 'prefix' => 'admin', 'namespace' => 'Admin'], function() {
 	
 	Route::get('books', [
 		'as' => 'admin.books.index',
