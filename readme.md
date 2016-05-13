@@ -11,6 +11,8 @@ Hello and welcome. This is a sample application named Simple Bookstore. This app
 
 You can visit the demo on this application [here](http://bookstore.3kupang.com)
 
+For the loqin credentials please use `demo@example.com` with password `1234`
+
 ## Introduction
 
 This application database consists only 5 tables, as illustrated below
