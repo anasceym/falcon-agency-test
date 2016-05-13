@@ -84,10 +84,18 @@ module.exports = {
 	props: [
 		'data-api-authors-url',
 		'data-api-books-url',
-		'data-api-genres-url'
+		'data-api-genres-url',
+		'data-download-pdf-url'
+			
 	],
 
 	methods: {
+		downloadPDF: function(e) {
+			e.preventDefault();
+			
+			window.open(this.dataDownloadPdfUrl + this.prepareQueryString());
+			
+		},
 		toggleSortDirection: function(e) {
 
 			e.preventDefault();
@@ -184,6 +192,12 @@ module.exports = {
 		},
 		changeHistory: function() {
 			
+			var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname + this.prepareQueryString();
+			window.history.pushState({path:newurl},'',newurl); 	
+		},
+		
+		prepareQueryString: function() {
+			
 			var prepareQueryString = {
 				keyword : this.keyword,
 			}; 
@@ -195,8 +209,7 @@ module.exports = {
 				page: this.pagination.current_page
 			});
 			
-			var newurl = window.location.protocol + "//" + window.location.host + window.location.pathname +'?'+ $.param(prepareQueryString).replace(/\+/g, "%20");
-			window.history.pushState({path:newurl},'',newurl); 	
+			return '?'+ $.param(prepareQueryString).replace(/\+/g, "%20");
 		},
 		
 		switchType: function (type, e) {

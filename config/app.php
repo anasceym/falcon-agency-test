@@ -160,7 +160,8 @@ return [
 		Intervention\Image\ImageServiceProvider::class,
 		DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
 		Dingo\Api\Provider\LaravelServiceProvider::class,
-		Sofa\Eloquence\ServiceProvider::class
+		Sofa\Eloquence\ServiceProvider::class,
+		Barryvdh\DomPDF\ServiceProvider::class,
 
     ],
 
@@ -211,6 +212,7 @@ return [
 		'Flash' => Laracasts\Flash\Flash::class,
 		'Image' => Intervention\Image\Facades\Image::class,
 		'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
+		'PDF' => Barryvdh\DomPDF\Facade::class,
 
     ],
 
