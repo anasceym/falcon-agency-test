@@ -7,6 +7,10 @@ Hello and welcome. This is a sample application named Simple Bookstore. This app
 - [Laravel Framework](https://github.com/laravel/laravel) - Open-sourced PHP Framework
 - [Vue JS](https://github.com/vuejs/vue) - Open-sourced JS library for building interactive web interfaces.
 
+## Demo
+
+You can visit the demo on this application [here](http://bookstore.3kupang.com)
+
 ## Introduction
 
 This application database consists only 5 tables, as illustrated below
@@ -63,8 +67,6 @@ The backend is where pages need `authentication`. Only authenticated user can vi
 5. `/admin/books/{book-id}/show`
  
      
-     
- 
 ## Development
  
 If you are interested to test this application locally,
@@ -74,5 +76,6 @@ If you are interested to test this application locally,
  3. `$ composer install` | `$ bower install` | `$ npm install`
  4. `$ gulp setup`
  5. `S gulp watch` To recompile changed files.
- 6. Run a web server pointed to `public/index.php`
- 7. Done.
+ 6. `$ php artisan migrate` and optional to run `$ php artisan db:seed`
+ 7. Run a web server pointed to `public/index.php`
+ 8. Done.
