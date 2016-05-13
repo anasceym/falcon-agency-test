@@ -28,17 +28,17 @@ We go through all the available routes one by one,
 
 The frontend is where all pages can be viewed by guest. No `authentication` needed.
 
- 1. `/` The homepage, where it acts the same with Google's search page
+1. `/` The homepage, where it acts the same with Google's search page
  
-     ![Image frontpage](resources/screenshots/frontpage.png)
+    ![Image frontpage](resources/screenshots/frontpage.png)
      
- 2. `/books` The book listing page, where guest can search, filter, sord, export to PDF
+2. `/books` The book listing page, where guest can search, filter, sord, export to PDF
  
- 	 ![Image frontpage](resources/screenshots/book-listing.png)
+    ![Image frontpage](resources/screenshots/book-listing.png)
  	 
- 3. `/books/{book-id}` The book details page where it shows all the details of the book
+3. `/books/{book-id}` The book details page where it shows all the details of the book
  
-     ![Image frontpage](resources/screenshots/book-details.png)
+    ![Image frontpage](resources/screenshots/book-details.png)
      
 ### Backend
 
@@ -46,21 +46,21 @@ The backend is where pages need `authentication`. Only authenticated user can vi
 
 1. `/login`
 
-⋅⋅⋅ ![Image frontpage](resources/screenshots/login-page.png)
+    ![Image frontpage](resources/screenshots/login-page.png)
  
 2. `/admin/books`
  
-⋅⋅⋅![Image frontpage](resources/screenshots/admin-books.png)
+    ![Image frontpage](resources/screenshots/admin-books.png)
  	
- 3. `/admin/books/new`
+3. `/admin/books/new`
  
  	![Image frontpage](resources/screenshots/admin-new.png)
  	
- 4. `/admin/books/{book-id}/edit`
+4. `/admin/books/{book-id}/edit`
  
- 	![Image frontpage](resources/screenshots/admin-new.png)
+    ![Image frontpage](resources/screenshots/admin-new.png)
  	
- 5. `/admin/books/{book-id}/show`
+5. `/admin/books/{book-id}/show`
  
      
      
